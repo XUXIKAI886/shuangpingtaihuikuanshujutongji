@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2025-10-01",
+    "totalAmount": 33.95,
+    "shopCount": 1
+  },
+  {
+    "date": "2025-10-08",
+    "totalAmount": 33.95,
+    "shopCount": 1
+  },
+  {
+    "date": "2025-10-09",
+    "totalAmount": 33.95,
+    "shopCount": 1
+  },
+  {
+    "date": "2025-10-10",
+    "totalAmount": 33.95,
+    "shopCount": 1
+  },
+  {
+    "date": "2025-10-11",
+    "totalAmount": 101.85000000000001,
+    "shopCount": 3
+  },
+  {
+    "date": "2025-10-12",
+    "totalAmount": 203.7,
+    "shopCount": 6
+  }
+]
