@@ -132,6 +132,9 @@ npm run dev
 
 \`\`\`
 饿了么固定费用数据统计/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml               # GitHub Actions 自动部署配置
 ├── app/
 │   ├── api/
 │   │   ├── upload/
@@ -155,7 +158,9 @@ npm run dev
 │   ├── processCycleExcel.ts         # 饿了么代运营处理脚本
 │   ├── processMeituanExcel.ts       # 美团代运营处理脚本
 │   └── inspect*.ts                  # Excel查看工具
-└── [配置文件]
+├── next.config.js                   # Next.js 配置（包含静态导出设置）
+├── package.json                     # 项目依赖
+└── README.md                        # 项目文档
 \`\`\`
 
 ## 命令行工具
@@ -193,15 +198,40 @@ npx tsx scripts/inspectMeituanExcel.ts   # 查看美团代运营
 
 ## 部署
 
-### GitHub Actions
+### 在线访问
 
-项目配置了GitHub Actions自动部署。推送到main分支会自动触发部署流程。
+🌐 **在线演示地址**: https://xuxikai886.github.io/shuangpingtaihuikuanshujutongji/
 
-### 手动部署
+### GitHub Actions 自动部署
 
+项目已配置 GitHub Actions 自动部署到 GitHub Pages:
+
+1. **自动触发**: 推送到 master 或 main 分支会自动触发部署
+2. **工作流配置**: \`.github/workflows/deploy.yml\`
+3. **构建输出**: 自动生成静态站点到 GitHub Pages
+
+**配置步骤**:
+1. 进入 GitHub 仓库的 **Settings** → **Pages**
+2. 在 "Build and deployment" 下选择 **Source**: \`GitHub Actions\`
+3. 推送代码后,在 **Actions** 标签页查看部署状态
+4. 部署成功后访问: \`https://[用户名].github.io/shuangpingtaihuikuanshujutongji/\`
+
+### 本地构建和部署
+
+**构建静态站点**:
 \`\`\`bash
 npm run build
-npm run start
+\`\`\`
+
+构建完成后会在 \`out/\` 目录生成静态文件。
+
+**本地预览生产版本**:
+\`\`\`bash
+# 方法1: 使用 serve
+npx serve@latest out
+
+# 方法2: 使用 http-server
+npx http-server out
 \`\`\`
 
 ## 注意事项
