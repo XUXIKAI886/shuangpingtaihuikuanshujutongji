@@ -4,6 +4,8 @@
 
 一个基于 Next.js 的饿了么和美团双平台代运营回款数据自动统计分析系统。
 
+> 💾 **数据存储说明**: 本系统使用浏览器 localStorage 存储数据,无需服务器,支持纯静态部署到 GitHub Pages。所有数据处理在浏览器本地完成,保护数据隐私。
+
 ## 功能特性
 
 ### 📊 多平台数据统计
@@ -12,15 +14,17 @@
 - **美团代运营回款**：每日线上回款数据统计（日期自动减1天）
 - **综合统计**：三平台数据合并展示，自动计算每日总金额和总回款店铺数
 
-### 📤 智能文件上传
+### 📤 智能文件上传 (客户端处理)
 - 支持三种数据类型上传：
   - 🔵 饿了么固定费用账单
   - 🟢 饿了么代运营回款账单
   - 🟠 美团代运营回款账单
 - 支持 .xlsx 和 .xls 格式
+- **浏览器端处理** Excel 文件,无需上传到服务器
 - 自动识别数据类型并处理
 - 实时更新统计结果
 - 每日可重复上传更新数据
+- 数据存储在浏览器 localStorage,刷新不丢失
 
 ### 📈 可视化数据展示
 - **概览卡片**：四个渐变卡片展示总金额和分平台金额
@@ -34,12 +38,13 @@
 
 ## 技术栈
 
-- **框架**: Next.js 15 (App Router)
+- **框架**: Next.js 15 (App Router) + 静态导出
 - **语言**: TypeScript
 - **样式**: Tailwind CSS
 - **图表**: Recharts
 - **图标**: Lucide React
-- **Excel处理**: xlsx
+- **Excel处理**: xlsx (客户端)
+- **数据存储**: localStorage (浏览器本地)
 
 ## 安装使用
 
@@ -61,7 +66,10 @@ npm run dev
 
 1. 在页面中选择数据类型（饿了么固定费用/饿了么代运营/美团代运营）
 2. 点击上传区域选择对应的Excel文件
-3. 系统自动处理并更新统计数据
+3. 浏览器自动处理 Excel 并保存到 localStorage
+4. 页面自动刷新显示最新统计数据
+
+> **注意**: 数据存储在浏览器本地,清空浏览器缓存会丢失数据,建议保留 Excel 原始文件。
 
 ## Excel文件格式要求
 
@@ -136,38 +144,39 @@ npm run dev
 │   └── workflows/
 │       └── deploy.yml               # GitHub Actions 自动部署配置
 ├── app/
-│   ├── api/
-│   │   ├── upload/
-│   │   │   └── route.ts             # 文件上传API（支持三种数据类型）
-│   │   └── clear-data/
-│   │       └── route.ts             # 清空数据API
+│   ├── api/                         # API 路由(静态部署时不使用)
+│   │   ├── upload/route.ts          # (已废弃,改用客户端处理)
+│   │   └── clear-data/route.ts      # (已废弃,改用客户端处理)
 │   ├── components/
+│   │   ├── ClientHome.tsx           # 客户端主组件(使用 localStorage)
 │   │   ├── AllPlatformsDailyStats.tsx  # 全平台每日统计表格
 │   │   ├── DailyCharts.tsx          # 可视化趋势图表
-│   │   ├── FileUpload.tsx           # 智能文件上传组件
-│   │   └── ClearDataButton.tsx      # 清空数据按钮
+│   │   ├── FileUpload.tsx           # 客户端 Excel 处理上传组件
+│   │   └── ClearDataButton.tsx      # 客户端清空 localStorage 按钮
 │   ├── layout.tsx                   # 布局组件
-│   ├── page.tsx                     # 主页面
+│   ├── page.tsx                     # 主页面入口
 │   └── globals.css                  # 全局样式
-├── public/data/
-│   ├── daily-stats.json             # 饿了么固定费用数据
-│   ├── cycle-daily-stats.json       # 饿了么代运营数据
-│   └── meituan-daily-stats.json     # 美团代运营数据
-├── scripts/
+├── public/data/                     # (仅用于开发,生产环境使用 localStorage)
+│   ├── daily-stats.json             # 饿了么固定费用示例数据
+│   ├── cycle-daily-stats.json       # 饿了么代运营示例数据
+│   └── meituan-daily-stats.json     # 美团代运营示例数据
+├── scripts/                         # 命令行工具(可选使用)
 │   ├── processExcel.ts              # 饿了么固定费用处理脚本
 │   ├── processCycleExcel.ts         # 饿了么代运营处理脚本
 │   ├── processMeituanExcel.ts       # 美团代运营处理脚本
 │   └── inspect*.ts                  # Excel查看工具
-├── next.config.js                   # Next.js 配置（包含静态导出设置）
+├── next.config.js                   # Next.js 配置(静态导出 + GitHub Pages)
 ├── package.json                     # 项目依赖
 └── README.md                        # 项目文档
 \`\`\`
 
-## 命令行工具
+## 命令行工具 (可选)
+
+> **提示**: 生产环境已改用浏览器客户端处理,命令行工具仅用于开发调试。
 
 ### 批量处理Excel文件
 
-如果需要在命令行中处理Excel文件：
+如果需要在命令行中处理Excel文件(生成到 \`public/data/\` 用于开发测试)：
 
 **处理饿了么固定费用：**
 \`\`\`bash
@@ -202,19 +211,37 @@ npx tsx scripts/inspectMeituanExcel.ts   # 查看美团代运营
 
 🌐 **在线演示地址**: https://xuxikai886.github.io/shuangpingtaihuikuanshujutongji/
 
-### GitHub Actions 自动部署
+### 🚀 GitHub Pages 静态部署
 
-项目已配置 GitHub Actions 自动部署到 GitHub Pages:
+本项目已针对 GitHub Pages 静态托管进行优化,所有功能在客户端运行,无需服务器支持。
+
+#### 部署特点:
+- ✅ **纯静态**: 使用 Next.js 静态导出(\`output: 'export'\`)
+- ✅ **无服务器**: 所有数据处理在浏览器中完成
+- ✅ **localStorage**: 数据存储在用户浏览器本地
+- ✅ **自动部署**: GitHub Actions 自动构建和发布
+
+#### GitHub Actions 自动部署流程:
 
 1. **自动触发**: 推送到 master 或 main 分支会自动触发部署
 2. **工作流配置**: \`.github/workflows/deploy.yml\`
 3. **构建输出**: 自动生成静态站点到 GitHub Pages
 
-**配置步骤**:
+**首次配置步骤**:
 1. 进入 GitHub 仓库的 **Settings** → **Pages**
 2. 在 "Build and deployment" 下选择 **Source**: \`GitHub Actions\`
 3. 推送代码后,在 **Actions** 标签页查看部署状态
 4. 部署成功后访问: \`https://[用户名].github.io/shuangpingtaihuikuanshujutongji/\`
+
+#### 部署架构说明:
+```
+用户浏览器
+├── 上传 Excel → xlsx 库解析 → 处理数据 → 存入 localStorage
+├── 读取数据 → 从 localStorage 加载 → 渲染图表和表格
+└── 清空数据 → 清除 localStorage → 刷新页面
+```
+
+所有操作完全在客户端完成,GitHub Pages 只提供静态文件托管。
 
 ### 本地构建和部署
 
@@ -242,11 +269,23 @@ npx http-server out
 3. **图表显示**：自动过滤最后一天数据（避免显示不完整的美团数据）
 4. **数据更新**：上传新文件会覆盖对应类型的现有数据
 
+### 💾 数据存储说明
+1. **存储位置**: 所有数据保存在浏览器 localStorage 中
+2. **数据隐私**: 数据不会上传到服务器,完全本地存储
+3. **数据持久性**:
+   - ✅ 刷新页面数据不会丢失
+   - ✅ 关闭浏览器重新打开数据仍然存在
+   - ❌ 清空浏览器缓存/Cookie 会丢失数据
+   - ❌ 更换浏览器或设备数据不会同步
+4. **数据备份**: 建议保留 Excel 原始文件作为备份
+
 ### 💡 使用建议
 1. **文件格式**：确保Excel文件包含必需的列名
 2. **数据类型**：上传前选择正确的数据类型
-3. **浏览器兼容**：建议使用Chrome、Firefox、Edge等现代浏览器
+3. **浏览器兼容**：建议使用Chrome、Firefox、Edge等现代浏览器(需支持 localStorage)
 4. **数据清空**：点击右上角"清空数据"按钮可清空所有平台数据
+5. **定期备份**: 由于数据存储在浏览器本地,建议定期备份 Excel 原始文件
+6. **浏览器限制**: localStorage 容量限制通常为 5-10MB,对于本系统的数据量完全足够
 
 ### 🎯 品牌信息
 - **品牌名称**：呈尚策划
