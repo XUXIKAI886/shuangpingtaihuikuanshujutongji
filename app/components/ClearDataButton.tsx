@@ -7,21 +7,19 @@ export default function ClearDataButton() {
   const [isClearing, setIsClearing] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleClearData = async () => {
+  const handleClearData = () => {
     setIsClearing(true);
     try {
-      const response = await fetch('/api/clear-data', {
-        method: 'POST',
-      });
+      // 清空 localStorage 中的所有数据
+      localStorage.removeItem('fixedFeeData');
+      localStorage.removeItem('elmCycleData');
+      localStorage.removeItem('meituanData');
 
-      const data = await response.json();
+      // 触发自定义事件通知其他组件数据已更新
+      window.dispatchEvent(new Event('dataUpdated'));
 
-      if (data.success) {
-        alert('数据已成功清空！页面将自动刷新。');
-        window.location.reload();
-      } else {
-        alert('清空数据失败: ' + data.message);
-      }
+      alert('数据已成功清空！页面将自动刷新。');
+      window.location.reload();
     } catch (error) {
       console.error('清空数据失败:', error);
       alert('清空数据失败，请重试');

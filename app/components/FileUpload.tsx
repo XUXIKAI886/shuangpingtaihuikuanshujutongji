@@ -2,13 +2,134 @@
 
 import { useState } from "react";
 import { Upload, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import * as XLSX from 'xlsx';
 
 type DataType = 'fixedFee' | 'elmCycle' | 'meituan';
+
+interface DailyData {
+  date: string;
+  totalAmount: number;
+  shopCount: number;
+}
 
 export default function FileUpload() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [selectedType, setSelectedType] = useState<DataType>('fixedFee');
+
+  // 处理饿了么固定费用数据
+  const processFixedFeeData = (rawData: any[]): DailyData[] => {
+    const shopDataMap = new Map<string, { amount: number, dates: Set<string> }>();
+    const dailyMap = new Map<string, { amount: number, shops: Set<string> }>();
+
+    rawData.forEach(row => {
+      const shopId = row['门店ID']?.toString() || '';
+      const shopName = row['店铺名称']?.toString() || '';
+      const settlementAmount = parseFloat(row['结算金额']?.toString() || '0');
+      const rawDate = row['结算日期']?.toString() || '';
+
+      if (!shopId || !rawDate) return;
+
+      const dateObj = new Date(rawDate);
+      const date = dateObj.toISOString().split('T')[0];
+
+      const key = `${shopId}_${date}`;
+      if (!shopDataMap.has(key)) {
+        shopDataMap.set(key, { amount: 0, dates: new Set() });
+      }
+      const shopData = shopDataMap.get(key)!;
+      shopData.amount += settlementAmount;
+      shopData.dates.add(date);
+
+      // 检查是否为 33.95 元
+      if (Math.abs(shopData.amount - 33.95) < 0.01) {
+        if (!dailyMap.has(date)) {
+          dailyMap.set(date, { amount: 0, shops: new Set() });
+        }
+        const dailyData = dailyMap.get(date)!;
+        dailyData.amount += shopData.amount;
+        dailyData.shops.add(shopName || shopId);
+      }
+    });
+
+    const dailyStats: DailyData[] = Array.from(dailyMap.entries())
+      .map(([date, data]) => ({
+        date,
+        totalAmount: data.amount,
+        shopCount: data.shops.size,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return dailyStats;
+  };
+
+  // 处理饿了么代运营数据
+  const processElmCycleData = (rawData: any[]): DailyData[] => {
+    const dailyMap = new Map<string, { amount: number, shops: Set<string> }>();
+
+    rawData.forEach(row => {
+      const shopId = row['门店id']?.toString() || '';
+      const settlementAmount = parseFloat(row['代运营结算金额']?.toString() || '0');
+      const rawDate = row['账单日期']?.toString() || '';
+
+      if (!rawDate || settlementAmount === 0) return;
+
+      const dateObj = new Date(rawDate);
+      const date = dateObj.toISOString().split('T')[0];
+
+      if (!dailyMap.has(date)) {
+        dailyMap.set(date, { amount: 0, shops: new Set() });
+      }
+      const dailyData = dailyMap.get(date)!;
+      dailyData.amount += settlementAmount;
+      if (shopId) dailyData.shops.add(shopId);
+    });
+
+    const dailyStats: DailyData[] = Array.from(dailyMap.entries())
+      .map(([date, data]) => ({
+        date,
+        totalAmount: data.amount,
+        shopCount: data.shops.size,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return dailyStats;
+  };
+
+  // 处理美团代运营数据
+  const processMeituanData = (rawData: any[]): DailyData[] => {
+    const dailyMap = new Map<string, { amount: number, shops: Set<string> }>();
+
+    rawData.slice(1).forEach(row => {
+      const rawDate = row['代运营账单']?.toString() || '';
+      const shopId = row['_1']?.toString() || '';
+      const settlementAmount = parseFloat(row['_4']?.toString() || '0');
+
+      if (!rawDate || settlementAmount === 0) return;
+
+      // 美团数据日期减1天
+      const dateObj = new Date(rawDate);
+      dateObj.setDate(dateObj.getDate() - 1);
+      const date = dateObj.toISOString().split('T')[0];
+
+      if (!dailyMap.has(date)) {
+        dailyMap.set(date, { amount: 0, shops: new Set() });
+      }
+      const dailyData = dailyMap.get(date)!;
+      dailyData.amount += settlementAmount;
+      if (shopId) dailyData.shops.add(shopId);
+    });
+
+    const dailyStats: DailyData[] = Array.from(dailyMap.entries())
+      .map(([date, data]) => ({
+        date,
+        totalAmount: data.amount,
+        shopCount: data.shops.size,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return dailyStats;
+  };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -24,27 +145,47 @@ export default function FileUpload() {
     setMessage(null);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('dataType', selectedType);
+      // ��取文件
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const rawData = XLSX.utils.sheet_to_json(worksheet);
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
+      let dailyStats: DailyData[] = [];
+      let storageKey = '';
+
+      // 根据类型处理数据
+      if (selectedType === 'fixedFee') {
+        dailyStats = processFixedFeeData(rawData);
+        storageKey = 'fixedFeeData';
+      } else if (selectedType === 'elmCycle') {
+        dailyStats = processElmCycleData(rawData);
+        storageKey = 'elmCycleData';
+      } else {
+        dailyStats = processMeituanData(rawData);
+        storageKey = 'meituanData';
+      }
+
+      // 保存到 localStorage
+      localStorage.setItem(storageKey, JSON.stringify(dailyStats));
+
+      // 触发自定义事件通知其他组件数据已更新
+      window.dispatchEvent(new Event('dataUpdated'));
+
+      setMessage({
+        type: 'success',
+        text: `上传成功！处理了 ${rawData.length} 条记录，统计了 ${dailyStats.length} 天数据。页面将自动刷新。`
       });
 
-      const result = await response.json();
+      // 延迟刷新页面
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
 
-      if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: `上传成功！处理了 ${result.stats.totalRecords} 条记录，统计了 ${result.stats.dayCount} 天数据。请手动刷新页面查看最新数据。`
-        });
-      } else {
-        setMessage({ type: 'error', text: result.error || '上传失败' });
-      }
     } catch (error) {
-      setMessage({ type: 'error', text: '上传失败: ' + (error as Error).message });
+      console.error('处理文件失败:', error);
+      setMessage({ type: 'error', text: '处理文件失败: ' + (error as Error).message });
     } finally {
       setUploading(false);
       // 清空input以便再次上传同一文件
