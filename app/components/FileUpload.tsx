@@ -229,13 +229,8 @@ export default function FileUpload() {
 
       setMessage({
         type: 'success',
-        text: `上传成功！处理了 ${rawData.length} 条记录，统计了 ${dailyStats.length} 天数据。页面将自动刷新。`
+        text: `上传成功！处理了 ${rawData.length} 条记录，统计了 ${dailyStats.length} 天数据。`
       });
-
-      // 延迟刷新页面
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
 
     } catch (error) {
       console.error('处理文件失败:', error);
@@ -373,21 +368,21 @@ export default function FileUpload() {
               <>
                 <li>• 上传饿了么代运营固定费用账单Excel文件</li>
                 <li>• 系统会自动统计净结算金额为33.95元的店铺</li>
-                <li>• 上传成功后页面会自动刷新显示最新数据</li>
+                <li>• 数据会实时更新到统计表格和图表中</li>
               </>
             )}
             {selectedType === 'elmCycle' && (
               <>
                 <li>• 上传饿了么周期账单Excel文件</li>
                 <li>• 系统会自动统计每日代运营结算金额</li>
-                <li>• 上传成功后页面会自动刷新显示最新数据</li>
+                <li>• 数据会实时更新到统计表格和图表中</li>
               </>
             )}
             {selectedType === 'meituan' && (
               <>
                 <li>• 上传美团代运营账单明细表Excel文件</li>
                 <li>• 系统会自动统计每日结算金额（日期会自动减1天）</li>
-                <li>• 上传成功后页面会自动刷新显示最新数据</li>
+                <li>• 数据会实时更新到统计表格和图表中</li>
               </>
             )}
             {selectedType === 'meituanOffline' && (
@@ -396,7 +391,7 @@ export default function FileUpload() {
                 <li>• Excel需包含: 日期、金额等字段</li>
                 <li>• 日期按照Excel中的原始日期展示(不减1天)</li>
                 <li>• 系统会自动按日期统计线下收款金额</li>
-                <li>• 上传成功后页面会自动刷新显示最新数据</li>
+                <li>• 数据会实时更新到统计表格和图表中</li>
               </>
             )}
           </ul>
