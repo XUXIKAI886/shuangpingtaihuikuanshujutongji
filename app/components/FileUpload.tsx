@@ -132,6 +132,7 @@ export default function FileUpload() {
   };
 
   // 处理美团线下收款数据
+  // 注意: 线下收款日期按照Excel中的原始日期展示,不减1天(与美团代运营不同)
   const processMeituanOfflineData = (rawData: any[]): DailyData[] => {
     const dailyMap = new Map<string, { amount: number, shops: Set<string> }>();
 
@@ -159,6 +160,7 @@ export default function FileUpload() {
         dateObj = new Date(rawDateValue.toString());
       }
 
+      // 注意: 线下收款使用原始日期,不像美团代运营那样减1天
       const date = dateObj.toISOString().split('T')[0];
 
       if (!dailyMap.has(date)) {
@@ -392,6 +394,7 @@ export default function FileUpload() {
               <>
                 <li>• 上传美团线下收款Excel文件</li>
                 <li>• Excel需包含: 日期、金额等字段</li>
+                <li>• 日期按照Excel中的原始日期展示(不减1天)</li>
                 <li>• 系统会自动按日期统计线下收款金额</li>
                 <li>• 上传成功后页面会自动刷新显示最新数据</li>
               </>
