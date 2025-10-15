@@ -137,15 +137,28 @@ export default function FileUpload() {
 
     rawData.forEach(row => {
       // 尝试多种可能的日期字段名
-      const rawDate = row['日期']?.toString() || row['收款日期']?.toString() || row['账单日期']?.toString() || '';
+      const rawDateValue = row['日期'] || row['收款日期'] || row['账单日期'] || '';
       // 尝试多种可能的金额字段名
       const amount = parseFloat(row['金额']?.toString() || row['收款金额']?.toString() || row['线下收款']?.toString() || '0');
       // 尝试获取店铺信息
       const shopId = row['店铺ID']?.toString() || row['门店ID']?.toString() || row['店铺']?.toString() || '';
 
-      if (!rawDate || amount === 0) return;
+      if (!rawDateValue || amount === 0) return;
 
-      const dateObj = new Date(rawDate);
+      let dateObj: Date;
+
+      // 判断是否为Excel日期序列号(数字类型)
+      if (typeof rawDateValue === 'number') {
+        // Excel日期序列号转换: 从1900年1月1日开始计算
+        // Excel的bug: 1900年被错误地认为是闰年,所以需要减2天
+        const excelEpoch = new Date(1900, 0, 1);
+        const daysOffset = rawDateValue - 2; // 减去2天修正Excel的bug
+        dateObj = new Date(excelEpoch.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+      } else {
+        // 如果是字符串日期,直接解析
+        dateObj = new Date(rawDateValue.toString());
+      }
+
       const date = dateObj.toISOString().split('T')[0];
 
       if (!dailyMap.has(date)) {
