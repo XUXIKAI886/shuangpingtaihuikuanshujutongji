@@ -151,9 +151,9 @@ export default function FileUpload() {
       // 判断是否为Excel日期序列号(数字类型)
       if (typeof rawDateValue === 'number') {
         // Excel日期序列号转换: 从1900年1月1日开始计算
-        // Excel的bug: 1900年被错误地认为是闰年,所以需要减2天
+        // Excel的bug: 1900年被错误地认为是闰年,所以需要减1天
         const excelEpoch = new Date(1900, 0, 1);
-        const daysOffset = rawDateValue - 2; // 减去2天修正Excel的bug
+        const daysOffset = rawDateValue - 1; // 减去1天修正Excel的闰年bug
         dateObj = new Date(excelEpoch.getTime() + daysOffset * 24 * 60 * 60 * 1000);
       } else {
         // 如果是字符串日期,直接解析
