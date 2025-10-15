@@ -14,6 +14,7 @@ export default function ClearDataButton() {
       localStorage.removeItem('fixedFeeData');
       localStorage.removeItem('elmCycleData');
       localStorage.removeItem('meituanData');
+      localStorage.removeItem('meituanOfflineData');
 
       // 触发自定义事件通知其他组件数据已更新
       window.dispatchEvent(new Event('dataUpdated'));

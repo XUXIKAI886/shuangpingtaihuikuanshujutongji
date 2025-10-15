@@ -13,14 +13,16 @@ interface DailyChartsProps {
   fixedFeeData: DailyData[];
   elmCycleData: DailyData[];
   meituanData: DailyData[];
+  meituanOfflineData: DailyData[];
 }
 
-export default function DailyCharts({ fixedFeeData, elmCycleData, meituanData }: DailyChartsProps) {
+export default function DailyCharts({ fixedFeeData, elmCycleData, meituanData, meituanOfflineData }: DailyChartsProps) {
   // 合并所有日期
   const allDates = new Set([
     ...fixedFeeData.map(d => d.date),
     ...elmCycleData.map(d => d.date),
-    ...meituanData.map(d => d.date)
+    ...meituanData.map(d => d.date),
+    ...meituanOfflineData.map(d => d.date)
   ]);
 
   const sortedDates = Array.from(allDates).sort();
@@ -32,17 +34,19 @@ export default function DailyCharts({ fixedFeeData, elmCycleData, meituanData }:
   const fixedFeeMap = new Map(fixedFeeData.map(d => [d.date, d]));
   const elmCycleMap = new Map(elmCycleData.map(d => [d.date, d]));
   const meituanMap = new Map(meituanData.map(d => [d.date, d]));
+  const meituanOfflineMap = new Map(meituanOfflineData.map(d => [d.date, d]));
 
   // 合并数据用于图表
   const chartData = displayDates.map(date => {
     const fixedFee = fixedFeeMap.get(date) || { totalAmount: 0, shopCount: 0 };
     const elmCycle = elmCycleMap.get(date) || { totalAmount: 0, shopCount: 0 };
     const meituan = meituanMap.get(date) || { totalAmount: 0, shopCount: 0 };
+    const meituanOffline = meituanOfflineMap.get(date) || { totalAmount: 0, shopCount: 0 };
 
     return {
       date: date.substring(5), // 只显示月-日
       fullDate: date,
-      totalAmount: fixedFee.totalAmount + elmCycle.totalAmount + meituan.totalAmount,
+      totalAmount: fixedFee.totalAmount + elmCycle.totalAmount + meituan.totalAmount + meituanOffline.totalAmount,
       totalShopCount: elmCycle.shopCount + meituan.shopCount,
     };
   });

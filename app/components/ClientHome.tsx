@@ -17,6 +17,7 @@ export default function ClientHome() {
   const [fixedFeeData, setFixedFeeData] = useState<DailyData[]>([]);
   const [elmCycleData, setElmCycleData] = useState<DailyData[]>([]);
   const [meituanData, setMeituanData] = useState<DailyData[]>([]);
+  const [meituanOfflineData, setMeituanOfflineData] = useState<DailyData[]>([]);
 
   // 从 localStorage 加载数据
   useEffect(() => {
@@ -25,10 +26,12 @@ export default function ClientHome() {
         const fixed = localStorage.getItem('fixedFeeData');
         const elm = localStorage.getItem('elmCycleData');
         const meituan = localStorage.getItem('meituanData');
+        const meituanOffline = localStorage.getItem('meituanOfflineData');
 
         if (fixed) setFixedFeeData(JSON.parse(fixed));
         if (elm) setElmCycleData(JSON.parse(elm));
         if (meituan) setMeituanData(JSON.parse(meituan));
+        if (meituanOffline) setMeituanOfflineData(JSON.parse(meituanOffline));
       } catch (error) {
         console.error('加载数据失败:', error);
       }
@@ -141,23 +144,25 @@ export default function ClientHome() {
         <FileUpload />
 
         {/* 可视化图表 */}
-        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0) && (
+        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0) && (
           <div className="mb-8">
             <DailyCharts
               fixedFeeData={fixedFeeData}
               elmCycleData={elmCycleData}
               meituanData={meituanData}
+              meituanOfflineData={meituanOfflineData}
             />
           </div>
         )}
 
         {/* 每日统计表格 */}
-        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0) && (
+        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0) && (
           <div className="mb-8">
             <AllPlatformsDailyStats
               fixedFeeData={fixedFeeData}
               elmCycleData={elmCycleData}
               meituanData={meituanData}
+              meituanOfflineData={meituanOfflineData}
             />
           </div>
         )}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Upload, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import * as XLSX from 'xlsx';
 
-type DataType = 'fixedFee' | 'elmCycle' | 'meituan';
+type DataType = 'fixedFee' | 'elmCycle' | 'meituan' | 'meituanOffline';
 
 interface DailyData {
   date: string;
@@ -131,6 +131,42 @@ export default function FileUpload() {
     return dailyStats;
   };
 
+  // 处理美团线下收款数据
+  const processMeituanOfflineData = (rawData: any[]): DailyData[] => {
+    const dailyMap = new Map<string, { amount: number, shops: Set<string> }>();
+
+    rawData.forEach(row => {
+      // 尝试多种可能的日期字段名
+      const rawDate = row['日期']?.toString() || row['收款日期']?.toString() || row['账单日期']?.toString() || '';
+      // 尝试多种可能的金额字段名
+      const amount = parseFloat(row['金额']?.toString() || row['收款金额']?.toString() || row['线下收款']?.toString() || '0');
+      // 尝试获取店铺信息
+      const shopId = row['店铺ID']?.toString() || row['门店ID']?.toString() || row['店铺']?.toString() || '';
+
+      if (!rawDate || amount === 0) return;
+
+      const dateObj = new Date(rawDate);
+      const date = dateObj.toISOString().split('T')[0];
+
+      if (!dailyMap.has(date)) {
+        dailyMap.set(date, { amount: 0, shops: new Set() });
+      }
+      const dailyData = dailyMap.get(date)!;
+      dailyData.amount += amount;
+      if (shopId) dailyData.shops.add(shopId);
+    });
+
+    const dailyStats: DailyData[] = Array.from(dailyMap.entries())
+      .map(([date, data]) => ({
+        date,
+        totalAmount: data.amount,
+        shopCount: data.shops.size,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return dailyStats;
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -162,9 +198,12 @@ export default function FileUpload() {
       } else if (selectedType === 'elmCycle') {
         dailyStats = processElmCycleData(rawData);
         storageKey = 'elmCycleData';
-      } else {
+      } else if (selectedType === 'meituan') {
         dailyStats = processMeituanData(rawData);
         storageKey = 'meituanData';
+      } else {
+        dailyStats = processMeituanOfflineData(rawData);
+        storageKey = 'meituanOfflineData';
       }
 
       // 保存到 localStorage
@@ -202,11 +241,11 @@ export default function FileUpload() {
 
       <div className="space-y-4">
         {/* 数据类型选择 */}
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => setSelectedType('fixedFee')}
             disabled={uploading}
-            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
+            className={`px-4 py-3 rounded-lg font-medium transition-all ${
               selectedType === 'fixedFee'
                 ? 'bg-blue-500 text-white shadow-md'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -217,7 +256,7 @@ export default function FileUpload() {
           <button
             onClick={() => setSelectedType('elmCycle')}
             disabled={uploading}
-            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
+            className={`px-4 py-3 rounded-lg font-medium transition-all ${
               selectedType === 'elmCycle'
                 ? 'bg-green-500 text-white shadow-md'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -228,13 +267,24 @@ export default function FileUpload() {
           <button
             onClick={() => setSelectedType('meituan')}
             disabled={uploading}
-            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
+            className={`px-4 py-3 rounded-lg font-medium transition-all ${
               selectedType === 'meituan'
                 ? 'bg-orange-500 text-white shadow-md'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             } ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             美团代运营回款
+          </button>
+          <button
+            onClick={() => setSelectedType('meituanOffline')}
+            disabled={uploading}
+            className={`px-4 py-3 rounded-lg font-medium transition-all ${
+              selectedType === 'meituanOffline'
+                ? 'bg-purple-500 text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            } ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            美团线下收款
           </button>
         </div>
 
@@ -289,17 +339,20 @@ export default function FileUpload() {
         <div className={`p-4 rounded-lg ${
           selectedType === 'fixedFee' ? 'bg-blue-50' :
           selectedType === 'elmCycle' ? 'bg-green-50' :
-          'bg-orange-50'
+          selectedType === 'meituan' ? 'bg-orange-50' :
+          'bg-purple-50'
         }`}>
           <h3 className={`text-sm font-semibold mb-2 ${
             selectedType === 'fixedFee' ? 'text-blue-900' :
             selectedType === 'elmCycle' ? 'text-green-900' :
-            'text-orange-900'
+            selectedType === 'meituan' ? 'text-orange-900' :
+            'text-purple-900'
           }`}>使用说明：</h3>
           <ul className={`text-sm space-y-1 ${
             selectedType === 'fixedFee' ? 'text-blue-800' :
             selectedType === 'elmCycle' ? 'text-green-800' :
-            'text-orange-800'
+            selectedType === 'meituan' ? 'text-orange-800' :
+            'text-purple-800'
           }`}>
             {selectedType === 'fixedFee' && (
               <>
@@ -319,6 +372,14 @@ export default function FileUpload() {
               <>
                 <li>• 上传美团代运营账单明细表Excel文件</li>
                 <li>• 系统会自动统计每日结算金额（日期会自动减1天）</li>
+                <li>• 上传成功后页面会自动刷新显示最新数据</li>
+              </>
+            )}
+            {selectedType === 'meituanOffline' && (
+              <>
+                <li>• 上传美团线下收款Excel文件</li>
+                <li>• Excel需包含: 日期、金额等字段</li>
+                <li>• 系统会自动按日期统计线下收款金额</li>
                 <li>• 上传成功后页面会自动刷新显示最新数据</li>
               </>
             )}
