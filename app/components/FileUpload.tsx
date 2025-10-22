@@ -41,8 +41,11 @@ export default function FileUpload() {
       shopData.amount += settlementAmount;
       shopData.dates.add(date);
 
-      // 检查是否为 33.95 元
-      if (Math.abs(shopData.amount - 33.95) < 0.01) {
+      // 检查是否为 33.95 元 (35 - 1.05) 或 36.86 元 (38 - 1.14)
+      const isTargetAmount = Math.abs(shopData.amount - 33.95) < 0.01 ||
+                            Math.abs(shopData.amount - 36.86) < 0.01;
+
+      if (isTargetAmount) {
         if (!dailyMap.has(date)) {
           dailyMap.set(date, { amount: 0, shops: new Set() });
         }
@@ -367,7 +370,7 @@ export default function FileUpload() {
             {selectedType === 'fixedFee' && (
               <>
                 <li>• 上传饿了么代运营固定费用账单Excel文件</li>
-                <li>• 系统会自动统计净结算金额为33.95元的店铺</li>
+                <li>• 系统会自动统计净结算金额为 33.95元 (35-1.05) 和 36.86元 (38-1.14) 的店铺</li>
                 <li>• 数据会实时更新到统计表格和图表中</li>
               </>
             )}
