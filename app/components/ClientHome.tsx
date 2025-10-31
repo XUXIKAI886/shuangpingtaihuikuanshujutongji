@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import AllPlatformsDailyStats from "./AllPlatformsDailyStats";
 import FileUpload from "./FileUpload";
 import ClearDataButton from "./ClearDataButton";
 import DailyCharts from "./DailyCharts";
-import { BarChart3, TrendingUp, DollarSign } from "lucide-react";
+import { BarChart3, TrendingUp, DollarSign, Calendar } from "lucide-react";
 
 interface DailyData {
   date: string;
@@ -18,6 +18,7 @@ export default function ClientHome() {
   const [elmCycleData, setElmCycleData] = useState<DailyData[]>([]);
   const [meituanData, setMeituanData] = useState<DailyData[]>([]);
   const [meituanOfflineData, setMeituanOfflineData] = useState<DailyData[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<string>('all'); // 'all' 或 'YYYY-MM' 格式
 
   // 从 localStorage 加载数据
   useEffect(() => {
@@ -54,11 +55,39 @@ export default function ClientHome() {
     };
   }, []);
 
-  // 计算总金额
-  const fixedFeeTotal = fixedFeeData.reduce((sum, day) => sum + day.totalAmount, 0);
-  const elmCycleTotal = elmCycleData.reduce((sum, day) => sum + day.totalAmount, 0);
-  const meituanTotal = meituanData.reduce((sum, day) => sum + day.totalAmount, 0);
-  const grandTotal = fixedFeeTotal + elmCycleTotal + meituanTotal;
+  // 提取所有可用月份（从所有数据源）
+  const availableMonths = useMemo(() => {
+    const monthSet = new Set<string>();
+
+    [...fixedFeeData, ...elmCycleData, ...meituanData, ...meituanOfflineData].forEach(item => {
+      const month = item.date.substring(0, 7); // 提取 YYYY-MM
+      monthSet.add(month);
+    });
+
+    return Array.from(monthSet).sort().reverse(); // 降序排列，最新的月份在前
+  }, [fixedFeeData, elmCycleData, meituanData, meituanOfflineData]);
+
+  // 根据选中的月份过滤数据
+  const filteredData = useMemo(() => {
+    const filterByMonth = (data: DailyData[]) => {
+      if (selectedMonth === 'all') return data;
+      return data.filter(item => item.date.startsWith(selectedMonth));
+    };
+
+    return {
+      fixedFeeData: filterByMonth(fixedFeeData),
+      elmCycleData: filterByMonth(elmCycleData),
+      meituanData: filterByMonth(meituanData),
+      meituanOfflineData: filterByMonth(meituanOfflineData),
+    };
+  }, [fixedFeeData, elmCycleData, meituanData, meituanOfflineData, selectedMonth]);
+
+  // 计算总金额（使用过滤后的数据）
+  const fixedFeeTotal = filteredData.fixedFeeData.reduce((sum, day) => sum + day.totalAmount, 0);
+  const elmCycleTotal = filteredData.elmCycleData.reduce((sum, day) => sum + day.totalAmount, 0);
+  const meituanTotal = filteredData.meituanData.reduce((sum, day) => sum + day.totalAmount, 0);
+  const meituanOfflineTotal = filteredData.meituanOfflineData.reduce((sum, day) => sum + day.totalAmount, 0);
+  const grandTotal = fixedFeeTotal + elmCycleTotal + meituanTotal + meituanOfflineTotal;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
@@ -80,6 +109,43 @@ export default function ClientHome() {
             <ClearDataButton />
           </div>
         </div>
+
+        {/* 月份筛选器 */}
+        {availableMonths.length > 0 && (
+          <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+            <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-blue-600" />
+                <label className="text-sm font-semibold text-gray-700">筛选月份:</label>
+              </div>
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer"
+              >
+                <option value="all">全部月份</option>
+                {availableMonths.map(month => (
+                  <option key={month} value={month}>
+                    {month} ({new Date(month + '-01').toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })})
+                  </option>
+                ))}
+              </select>
+              {selectedMonth !== 'all' && (
+                <button
+                  onClick={() => setSelectedMonth('all')}
+                  className="px-3 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  清除筛选
+                </button>
+              )}
+              <div className="text-sm text-gray-500">
+                当前显示: <span className="font-semibold text-gray-700">
+                  {selectedMonth === 'all' ? '所有数据' : `${selectedMonth} 月数据`}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* 总金额概览卡片 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -147,10 +213,10 @@ export default function ClientHome() {
         {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0) && (
           <div className="mb-8">
             <DailyCharts
-              fixedFeeData={fixedFeeData}
-              elmCycleData={elmCycleData}
-              meituanData={meituanData}
-              meituanOfflineData={meituanOfflineData}
+              fixedFeeData={filteredData.fixedFeeData}
+              elmCycleData={filteredData.elmCycleData}
+              meituanData={filteredData.meituanData}
+              meituanOfflineData={filteredData.meituanOfflineData}
             />
           </div>
         )}
@@ -159,10 +225,10 @@ export default function ClientHome() {
         {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0) && (
           <div className="mb-8">
             <AllPlatformsDailyStats
-              fixedFeeData={fixedFeeData}
-              elmCycleData={elmCycleData}
-              meituanData={meituanData}
-              meituanOfflineData={meituanOfflineData}
+              fixedFeeData={filteredData.fixedFeeData}
+              elmCycleData={filteredData.elmCycleData}
+              meituanData={filteredData.meituanData}
+              meituanOfflineData={filteredData.meituanOfflineData}
             />
           </div>
         )}
