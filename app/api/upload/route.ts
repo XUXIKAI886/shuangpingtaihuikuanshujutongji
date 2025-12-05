@@ -23,7 +23,8 @@ interface DailyData {
 
 // 处理饿了么固定费用数据
 function processFixedFeeData(rawData: RawData[]): { shopStats: ShopData[], dailyStats: DailyData[] } {
-  const STANDARD_AMOUNT = 33.95;
+  // 固定费用标准金额：33.95 (35 - 1.05)、36.86 (38 - 1.14)、50.00 (51.5 - 1.5)
+  const STANDARD_AMOUNTS = [33.95, 36.86, 50];
 
   // 临时存储：按店铺+日期分组计算净结算金额
   const shopDailyMap = new Map<string, { shopId: string, shopName: string, contractStartDate: string, date: string, netAmount: number }>();
@@ -56,9 +57,13 @@ function processFixedFeeData(rawData: RawData[]): { shopStats: ShopData[], daily
   const shopMap = new Map<string, ShopData>();
   const dailyMap = new Map<string, { amount: number, shops: Set<string> }>();
 
-  // 处理净结算金额，只统计等于33.95的记录
+  // 处理净结算金额，只统计等于标准金额（33.95/36.86/50）的记录
   shopDailyMap.forEach(record => {
-    if (Math.abs(record.netAmount - STANDARD_AMOUNT) < 0.01) {
+    const isTargetAmount = STANDARD_AMOUNTS.some(amount =>
+      Math.abs(record.netAmount - amount) < 0.01
+    );
+
+    if (isTargetAmount) {
       if (!shopMap.has(record.shopId)) {
         shopMap.set(record.shopId, {
           shopId: record.shopId,

@@ -208,7 +208,7 @@ export default function CombinedDailyStats({ fixedFeeData, cycleData }: Combined
             <h3 className="text-sm font-semibold text-blue-900">饿了么固定费用</h3>
           </div>
           <p className="text-xs text-blue-800">
-            代运营固定费用账单，每个店铺净结算金额为33.95元（35元 - 1.05元抽佣）
+            代运营固定费用账单，仅统计净结算33.95/36.86/50元（对应35-1.05、38-1.14、51.5-1.5）
           </p>
         </div>
 

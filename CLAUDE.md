@@ -71,7 +71,7 @@ npx tsx scripts/inspectMeituanExcel.ts
 
 ### 数据流架构
 
-1. **数据输入**: 用户上传 Excel 文件 → FileUpload 组件使用 xlsx 库解析
+1. **数据输入**: 用户上传 Excel 文件 → FileUpload 组件通过 useFileUpload Hook 使用 xlsx 库解析
 2. **数据处理**: 根据数据类型调用对应的处理函数（processFixedFeeData/processElmCycleData/processMeituanData/processMeituanOfflineData）
 3. **数据存储**: 处理后的数据保存到 localStorage（fixedFeeData/elmCycleData/meituanData/meituanOfflineData）
 4. **数据同步**: 触发自定义 'dataUpdated' 事件，通知所有组件刷新
@@ -94,10 +94,11 @@ page.tsx (服务端组件)
 
 #### 1. 饿了么固定费用 (fixedFee)
 - **数据源字段**: 门店ID、店铺名称、结算金额、结算日期
-- **计算逻辑**: 按"店铺ID + 结算日期"分组，统计两种固定费用档位：
+- **计算逻辑**: 按"店铺ID + 结算日期"分组，统计三种固定费用档位：
   - **档位1**: 净结算金额为 **33.95元**（35.00元固定费用 - 1.05元抽佣）
   - **档位2**: 净结算金额为 **36.86元**（38.00元固定费用 - 1.14元抽佣）
-- **代码位置**: FileUpload.tsx:21-67, processFixedFeeData 函数
+  - **档位3**: 净结算金额为 **50.00元**（51.50元固定费用 - 1.50元抽佣）
+- **代码位置**: `app/lib/upload/processors.ts` 中的 `processFixedFeeData`（由 `app/hooks/useFileUpload.ts` 调用）
 - **存储键**: `fixedFeeData`
 
 #### 2. 饿了么代运营回款 (elmCycle)
@@ -191,16 +192,16 @@ interface DailyData {
 
 ### 添加新的数据类型
 
-1. 在 `FileUpload.tsx` 中添加新的 `DataType`
-2. 实现对应的处理函数 (如 `processNewData`)
-3. 在 `handleFileUpload` 中添加新类型的分支逻辑
-4. 定义新的 localStorage 存储键
+1. 在 `app/lib/upload/processors.ts` 中扩展 `UploadType` 并新增对应的处理函数
+2. 在同文件的 `processDataByType` 中注册新类型及存储键
+3. 若需要额外状态，更新 `app/hooks/useFileUpload.ts`（如默认类型或验证逻辑）
+4. 在 `app/components/FileUpload.tsx` 中新增按钮与使用说明文案
 5. 在 `ClientHome.tsx` 中添加新数据的 state 和加载逻辑
 6. 更新 `AllPlatformsDailyStats.tsx` 和 `DailyCharts.tsx` 以展示新数据
 
 ### 修改数据处理逻辑
 
-1. 定位到对应的处理函数 (FileUpload.tsx:21-183)
+1. 定位到对应的处理函数 (`app/lib/upload/processors.ts`)
 2. 修改计算逻辑（分组、过滤、聚合等）
 3. 确保返回格式符合 `DailyData[]` 接口
 4. 测试上传功能和数据展示

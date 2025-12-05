@@ -31,8 +31,8 @@ function readExcel(filePath: string): RawData[] {
 
 // 处理数据
 function processData(rawData: RawData[]): { shopStats: ShopData[], dailyStats: DailyData[] } {
-  // 固定费用标准金额：33.95元 (35 - 1.05) 和 36.86元 (38 - 1.14)
-  const STANDARD_AMOUNTS = [33.95, 36.86];
+  // 固定费用标准金额：33.95元 (35 - 1.05)、36.86元 (38 - 1.14)、50.00元 (51.5 - 1.5)
+  const STANDARD_AMOUNTS = [33.95, 36.86, 50];
 
   // 临时存储：按店铺+日期分组计算净结算金额
   const shopDailyMap = new Map<string, { shopId: string, shopName: string, contractStartDate: string, date: string, netAmount: number }>();
@@ -69,9 +69,9 @@ function processData(rawData: RawData[]): { shopStats: ShopData[], dailyStats: D
   // 用于存储每日的统计数据
   const dailyMap = new Map<string, { amount: number, shops: Set<string> }>();
 
-  // 处理净结算金额，统计等于 33.95元 或 36.86元 的记录
+  // 处理净结算金额，统计等于 33.95、36.86 或 50 元的记录
   shopDailyMap.forEach(record => {
-    // 检查是否为目标金额（33.95 或 36.86）
+    // 检查是否为目标金额
     const isTargetAmount = STANDARD_AMOUNTS.some(amount =>
       Math.abs(record.netAmount - amount) < 0.01
     );
