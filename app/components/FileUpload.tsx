@@ -44,7 +44,7 @@ const TYPE_CONFIG: Record<UploadType, {
 const GUIDE_CONTENT: Record<UploadType, string[]> = {
   fixedFee: [
     '• 上传饿了么代运营固定费用账单Excel文件',
-    '• 系统会自动统计净结算金额为33.95/36.86/50元的店铺',
+    '• 系统会自动统计净结算金额为 33.95 / 36.86 / 48.50 / 193.03 元的店铺',
     '• 数据会实时更新到统计表格和图表中'
   ],
   elmCycle: [

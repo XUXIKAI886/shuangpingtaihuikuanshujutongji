@@ -7,7 +7,9 @@ export interface DailyData {
 }
 
 // 饿了么固定费用允许的净结算金额
-const FIXED_FEE_AMOUNTS = [33.95, 36.86, 50];
+// 计算公式: 固定费用 - 抽佣(3%) = 净结算金额
+// 35.00 - 1.05 = 33.95 | 38.00 - 1.14 = 36.86 | 50.00 - 1.50 = 48.50 | 199.00 - 5.97 = 193.03
+const FIXED_FEE_AMOUNTS = [33.95, 36.86, 48.5, 193.03];
 
 const EXCEL_BASE_DATE = new Date(1900, 0, 1);
 
