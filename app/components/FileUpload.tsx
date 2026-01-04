@@ -38,6 +38,13 @@ const TYPE_CONFIG: Record<UploadType, {
     guideBg: 'bg-purple-50',
     guideTitle: 'text-purple-900',
     guideText: 'text-purple-800'
+  },
+  meituanRefund: {
+    label: '美团退款',
+    buttonActiveClass: 'bg-red-500 text-white shadow-md',
+    guideBg: 'bg-red-50',
+    guideTitle: 'text-red-900',
+    guideText: 'text-red-800'
   }
 };
 
@@ -61,10 +68,15 @@ const GUIDE_CONTENT: Record<UploadType, string[]> = {
     '• 上传包含日期与金额字段的美团线下收款Excel文件',
     '• 日期按照Excel原始日期展示（不会减1天）',
     '• 系统会自动按日期统计线下收款金额'
+  ],
+  meituanRefund: [
+    '• 上传包含日期与退款字段的Excel文件',
+    '• 系统会读取第三列"退款"字段的金额',
+    '• 退款数据会显示在美团线下收款和每日总计之间'
   ]
 };
 
-const uploadTypes: UploadType[] = ['fixedFee', 'elmCycle', 'meituan', 'meituanOffline'];
+const uploadTypes: UploadType[] = ['fixedFee', 'elmCycle', 'meituan', 'meituanOffline', 'meituanRefund'];
 const inactiveButtonClass = 'bg-gray-100 text-gray-700 hover:bg-gray-200';
 
 export default function FileUpload() {

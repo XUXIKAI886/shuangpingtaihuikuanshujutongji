@@ -1,4 +1,4 @@
-export type UploadType = 'fixedFee' | 'elmCycle' | 'meituan' | 'meituanOffline';
+export type UploadType = 'fixedFee' | 'elmCycle' | 'meituan' | 'meituanOffline' | 'meituanRefund';
 
 export interface DailyData {
   date: string;
@@ -154,6 +154,38 @@ export const processMeituanOfflineData = (rawData: any[]): DailyData[] => {
   return mapToDailyStats(dailyMap);
 };
 
+// 处理美团退款数据（从第三列"退款"字段读取）
+export const processMeituanRefundData = (rawData: any[]): DailyData[] => {
+  const dailyMap = new Map<string, { amount: number; shops: Set<string> }>();
+
+  rawData.forEach(row => {
+    const rawDateValue = row['日期'] || row['收款日期'] || row['账单日期'] || '';
+    const refundAmount = parseFloat(
+      row['退款']?.toString() ||
+      row['退款金额']?.toString() ||
+      '0'
+    );
+    const shopId = row['店铺ID']?.toString() ||
+      row['门店ID']?.toString() ||
+      row['店铺']?.toString() ||
+      '';
+
+    if (!rawDateValue || refundAmount === 0) return;
+
+    const dateObj = parseExcelDate(rawDateValue);
+    const date = dateObj.toISOString().split('T')[0];
+
+    if (!dailyMap.has(date)) {
+      dailyMap.set(date, { amount: 0, shops: new Set() });
+    }
+    const dailyData = dailyMap.get(date)!;
+    dailyData.amount += refundAmount;
+    if (shopId) dailyData.shops.add(shopId);
+  });
+
+  return mapToDailyStats(dailyMap);
+};
+
 export const processDataByType = (
   type: UploadType,
   rawData: any[]
@@ -166,6 +198,9 @@ export const processDataByType = (
     case 'meituan':
       return { dailyStats: processMeituanData(rawData), storageKey: 'meituanData' };
     case 'meituanOffline':
+      return { dailyStats: processMeituanOfflineData(rawData), storageKey: 'meituanOfflineData' };
+    case 'meituanRefund':
+      return { dailyStats: processMeituanRefundData(rawData), storageKey: 'meituanRefundData' };
     default:
       return { dailyStats: processMeituanOfflineData(rawData), storageKey: 'meituanOfflineData' };
   }

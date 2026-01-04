@@ -13,20 +13,23 @@ interface AllPlatformsDailyStatsProps {
   elmCycleData: DailyData[];     // 饿了么代运营回款
   meituanData: DailyData[];      // 美团代运营回款
   meituanOfflineData: DailyData[]; // 美团线下收款
+  meituanRefundData: DailyData[]; // 美团退款
 }
 
 export default function AllPlatformsDailyStats({
   fixedFeeData,
   elmCycleData,
   meituanData,
-  meituanOfflineData
+  meituanOfflineData,
+  meituanRefundData
 }: AllPlatformsDailyStatsProps) {
   // 合并所有数据源的日期
   const allDates = new Set([
     ...fixedFeeData.map(d => d.date),
     ...elmCycleData.map(d => d.date),
     ...meituanData.map(d => d.date),
-    ...meituanOfflineData.map(d => d.date)
+    ...meituanOfflineData.map(d => d.date),
+    ...meituanRefundData.map(d => d.date)
   ]);
 
   // 转换为数组并排序
@@ -37,6 +40,7 @@ export default function AllPlatformsDailyStats({
   const elmCycleMap = new Map(elmCycleData.map(d => [d.date, d]));
   const meituanMap = new Map(meituanData.map(d => [d.date, d]));
   const meituanOfflineMap = new Map(meituanOfflineData.map(d => [d.date, d]));
+  const meituanRefundMap = new Map(meituanRefundData.map(d => [d.date, d]));
 
   // 合并数据
   const combinedData = sortedDates.map(date => {
@@ -44,6 +48,7 @@ export default function AllPlatformsDailyStats({
     const elmCycle = elmCycleMap.get(date) || { totalAmount: 0, shopCount: 0 };
     const meituan = meituanMap.get(date) || { totalAmount: 0, shopCount: 0 };
     const meituanOffline = meituanOfflineMap.get(date) || { totalAmount: 0, shopCount: 0 };
+    const meituanRefund = meituanRefundMap.get(date) || { totalAmount: 0, shopCount: 0 };
 
     return {
       date,
@@ -54,7 +59,8 @@ export default function AllPlatformsDailyStats({
       meituanAmount: meituan.totalAmount,
       meituanShopCount: meituan.shopCount,
       meituanOfflineAmount: meituanOffline.totalAmount,
-      totalAmount: fixedFee.totalAmount + elmCycle.totalAmount + meituan.totalAmount + meituanOffline.totalAmount,
+      meituanRefundAmount: meituanRefund.totalAmount,
+      totalAmount: fixedFee.totalAmount + elmCycle.totalAmount + meituan.totalAmount + meituanOffline.totalAmount - meituanRefund.totalAmount,
       totalShopCount: elmCycle.shopCount + meituan.shopCount, // 总回款店铺数
     };
   });
@@ -65,6 +71,7 @@ export default function AllPlatformsDailyStats({
     elmCycleAmount: acc.elmCycleAmount + day.elmCycleAmount,
     meituanAmount: acc.meituanAmount + day.meituanAmount,
     meituanOfflineAmount: acc.meituanOfflineAmount + day.meituanOfflineAmount,
+    meituanRefundAmount: acc.meituanRefundAmount + day.meituanRefundAmount,
     totalAmount: acc.totalAmount + day.totalAmount,
     fixedFeeShopCount: acc.fixedFeeShopCount + day.fixedFeeShopCount,
     elmCycleShopCount: acc.elmCycleShopCount + day.elmCycleShopCount,
@@ -75,6 +82,7 @@ export default function AllPlatformsDailyStats({
     elmCycleAmount: 0,
     meituanAmount: 0,
     meituanOfflineAmount: 0,
+    meituanRefundAmount: 0,
     totalAmount: 0,
     fixedFeeShopCount: 0,
     elmCycleShopCount: 0,
@@ -115,6 +123,9 @@ export default function AllPlatformsDailyStats({
                 <th className="px-3 py-3 text-center text-xs font-bold text-pink-600 uppercase tracking-wider">
                   美团线下收款
                 </th>
+                <th className="px-3 py-3 text-center text-xs font-bold text-red-600 uppercase tracking-wider">
+                  退款
+                </th>
                 <th className="px-3 py-3 text-center text-xs font-bold text-purple-700 uppercase tracking-wider" colSpan={2}>
                   每日总计
                 </th>
@@ -128,6 +139,7 @@ export default function AllPlatformsDailyStats({
                 <th className="px-2 py-2 text-xs font-medium text-gray-600">金额</th>
                 <th className="px-2 py-2 text-xs font-medium text-gray-600">店铺</th>
                 <th className="px-2 py-2 text-xs font-medium text-gray-600">金额</th>
+                <th className="px-2 py-2 text-xs font-medium text-gray-600">金额</th>
                 <th className="px-2 py-2 text-xs font-medium text-gray-600">总金额</th>
                 <th className="px-2 py-2 text-xs font-medium text-gray-600">总店铺</th>
               </tr>
@@ -138,6 +150,7 @@ export default function AllPlatformsDailyStats({
                 const hasElmCycle = day.elmCycleAmount > 0;
                 const hasMeituan = day.meituanAmount > 0;
                 const hasMeituanOffline = day.meituanOfflineAmount > 0;
+                const hasMeituanRefund = day.meituanRefundAmount > 0;
 
                 return (
                   <tr key={day.date} className="hover:bg-gray-50 transition-colors">
@@ -207,6 +220,15 @@ export default function AllPlatformsDailyStats({
                       </span>
                     </td>
 
+                    {/* 退款 */}
+                    <td className="px-2 py-3 whitespace-nowrap text-center">
+                      <span className={`text-sm font-semibold ${
+                        hasMeituanRefund ? 'text-red-600' : 'text-gray-300'
+                      }`}>
+                        ¥{day.meituanRefundAmount.toFixed(2)}
+                      </span>
+                    </td>
+
                     {/* 每日总计 */}
                     <td className="px-2 py-3 whitespace-nowrap text-center">
                       <span className="text-sm font-bold text-purple-600">
@@ -260,6 +282,11 @@ export default function AllPlatformsDailyStats({
                 <td className="px-2 py-3 whitespace-nowrap text-center">
                   <span className="text-sm font-bold text-pink-600">
                     ¥{totals.meituanOfflineAmount.toFixed(2)}
+                  </span>
+                </td>
+                <td className="px-2 py-3 whitespace-nowrap text-center">
+                  <span className="text-sm font-bold text-red-600">
+                    ¥{totals.meituanRefundAmount.toFixed(2)}
                   </span>
                 </td>
                 <td className="px-2 py-3 whitespace-nowrap text-center">

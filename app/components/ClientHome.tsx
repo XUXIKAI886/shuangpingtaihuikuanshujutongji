@@ -18,6 +18,7 @@ export default function ClientHome() {
   const [elmCycleData, setElmCycleData] = useState<DailyData[]>([]);
   const [meituanData, setMeituanData] = useState<DailyData[]>([]);
   const [meituanOfflineData, setMeituanOfflineData] = useState<DailyData[]>([]);
+  const [meituanRefundData, setMeituanRefundData] = useState<DailyData[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('all'); // 'all' 或 'YYYY-MM' 格式
 
   // 从 localStorage 加载数据
@@ -28,11 +29,13 @@ export default function ClientHome() {
         const elm = localStorage.getItem('elmCycleData');
         const meituan = localStorage.getItem('meituanData');
         const meituanOffline = localStorage.getItem('meituanOfflineData');
+        const meituanRefund = localStorage.getItem('meituanRefundData');
 
         if (fixed) setFixedFeeData(JSON.parse(fixed));
         if (elm) setElmCycleData(JSON.parse(elm));
         if (meituan) setMeituanData(JSON.parse(meituan));
         if (meituanOffline) setMeituanOfflineData(JSON.parse(meituanOffline));
+        if (meituanRefund) setMeituanRefundData(JSON.parse(meituanRefund));
       } catch (error) {
         console.error('加载数据失败:', error);
       }
@@ -59,13 +62,13 @@ export default function ClientHome() {
   const availableMonths = useMemo(() => {
     const monthSet = new Set<string>();
 
-    [...fixedFeeData, ...elmCycleData, ...meituanData, ...meituanOfflineData].forEach(item => {
+    [...fixedFeeData, ...elmCycleData, ...meituanData, ...meituanOfflineData, ...meituanRefundData].forEach(item => {
       const month = item.date.substring(0, 7); // 提取 YYYY-MM
       monthSet.add(month);
     });
 
     return Array.from(monthSet).sort().reverse(); // 降序排列，最新的月份在前
-  }, [fixedFeeData, elmCycleData, meituanData, meituanOfflineData]);
+  }, [fixedFeeData, elmCycleData, meituanData, meituanOfflineData, meituanRefundData]);
 
   // 根据选中的月份过滤数据
   const filteredData = useMemo(() => {
@@ -79,15 +82,17 @@ export default function ClientHome() {
       elmCycleData: filterByMonth(elmCycleData),
       meituanData: filterByMonth(meituanData),
       meituanOfflineData: filterByMonth(meituanOfflineData),
+      meituanRefundData: filterByMonth(meituanRefundData),
     };
-  }, [fixedFeeData, elmCycleData, meituanData, meituanOfflineData, selectedMonth]);
+  }, [fixedFeeData, elmCycleData, meituanData, meituanOfflineData, meituanRefundData, selectedMonth]);
 
   // 计算总金额（使用过滤后的数据）
   const fixedFeeTotal = filteredData.fixedFeeData.reduce((sum, day) => sum + day.totalAmount, 0);
   const elmCycleTotal = filteredData.elmCycleData.reduce((sum, day) => sum + day.totalAmount, 0);
   const meituanTotal = filteredData.meituanData.reduce((sum, day) => sum + day.totalAmount, 0);
   const meituanOfflineTotal = filteredData.meituanOfflineData.reduce((sum, day) => sum + day.totalAmount, 0);
-  const grandTotal = fixedFeeTotal + elmCycleTotal + meituanTotal + meituanOfflineTotal;
+  const meituanRefundTotal = filteredData.meituanRefundData.reduce((sum, day) => sum + day.totalAmount, 0);
+  const grandTotal = fixedFeeTotal + elmCycleTotal + meituanTotal + meituanOfflineTotal - meituanRefundTotal;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
@@ -210,7 +215,7 @@ export default function ClientHome() {
         <FileUpload />
 
         {/* 可视化图表 */}
-        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0) && (
+        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0 || meituanRefundData.length > 0) && (
           <div className="mb-8">
             <DailyCharts
               fixedFeeData={filteredData.fixedFeeData}
@@ -222,19 +227,20 @@ export default function ClientHome() {
         )}
 
         {/* 每日统计表格 */}
-        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0) && (
+        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0 || meituanRefundData.length > 0) && (
           <div className="mb-8">
             <AllPlatformsDailyStats
               fixedFeeData={filteredData.fixedFeeData}
               elmCycleData={filteredData.elmCycleData}
               meituanData={filteredData.meituanData}
               meituanOfflineData={filteredData.meituanOfflineData}
+              meituanRefundData={filteredData.meituanRefundData}
             />
           </div>
         )}
 
         {/* 空状态提示 */}
-        {fixedFeeData.length === 0 && elmCycleData.length === 0 && meituanData.length === 0 && (
+        {fixedFeeData.length === 0 && elmCycleData.length === 0 && meituanData.length === 0 && meituanOfflineData.length === 0 && meituanRefundData.length === 0 && (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <p className="text-gray-500 text-lg mb-4">暂无数据</p>
             <p className="text-gray-400">请上传 Excel 文件开始统计分析</p>
