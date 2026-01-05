@@ -104,10 +104,10 @@ export default function AllPlatformsDailyStats({
       </div>
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-auto max-h-[70vh]">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-blue-200">
-              <tr>
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
                 <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                   日期
                 </th>
@@ -130,7 +130,7 @@ export default function AllPlatformsDailyStats({
                   每日总计
                 </th>
               </tr>
-              <tr className="bg-gray-50 border-b border-gray-200">
+              <tr className="bg-gray-50 border-b-2 border-blue-200">
                 <th className="px-4 py-2"></th>
                 <th className="px-2 py-2 text-xs font-medium text-gray-600">金额</th>
                 <th className="px-2 py-2 text-xs font-medium text-gray-600">店铺</th>
