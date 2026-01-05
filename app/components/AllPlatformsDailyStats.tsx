@@ -316,7 +316,7 @@ export default function AllPlatformsDailyStats({
             <h3 className="text-sm font-semibold text-blue-900">饿了么固定费用</h3>
           </div>
           <p className="text-xs text-blue-800">
-            固定费用账单，仅统计净结算33.95、36.86或50元
+            固定费用账单，统计净结算33.95/36.86/38.80/48.50/85.36/193.03元
           </p>
         </div>
 
