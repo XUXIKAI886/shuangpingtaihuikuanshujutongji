@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync:excel": "npx tsx scripts/syncExcelToJson.ts"
+    "sync:excel": "npx tsx scripts/syncExcelToJson.ts",
+    "skill:sync-push": "npx tsx scripts/syncExcelAppendAndPush.ts"
   },
   "dependencies": {
     "lucide-react": "^0.263.1",
