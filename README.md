@@ -4,7 +4,7 @@
 
 一个基于 Next.js 的饿了么和美团双平台代运营回款数据自动统计分析系统。
 
-> 💾 **数据存储说明**: 本系统使用浏览器 localStorage 存储数据,无需服务器,支持纯静态部署到 GitHub Pages。所有数据处理在浏览器本地完成,保护数据隐私。
+> 💾 **数据存储说明**: 本系统支持将 Excel 处理结果落盘为 `public/data/*.json` 并在前端直接读取；同时保留 localStorage 作为兜底。
 
 ## 功能特性
 
@@ -72,6 +72,34 @@ npm run dev
 \`\`\`
 
 访问 [http://localhost:3000](http://localhost:3000) 查看系统。
+
+### 2.5 同步 Excel 到 JSON（推荐生产流程）
+
+将 Excel 放入以下固定目录（按 1-5 顺序）：
+
+- `excel-input/1`：饿了么固定费用
+- `excel-input/2`：饿了么代运营回款
+- `excel-input/3`：美团代运营回款
+- `excel-input/4`：美团线下收款
+- `excel-input/5`：美团退款
+
+执行同步命令：
+
+```bash
+npm run sync:excel
+```
+
+命令会读取每个目录中“最新修改”的 Excel 文件，处理后写入：
+
+- `public/data/fixedFeeData.json`
+- `public/data/elmCycleData.json`
+- `public/data/meituanData.json`
+- `public/data/meituanOfflineData.json`
+- `public/data/meituanRefundData.json`
+
+以及同步日志：
+
+- `public/data/sync-meta.json`
 
 ### 3. 上传Excel文件
 
@@ -207,10 +235,17 @@ npm run dev
 │   ├── daily-stats.json             # 饿了么固定费用示例数据
 │   ├── cycle-daily-stats.json       # 饿了么代运营示例数据
 │   └── meituan-daily-stats.json     # 美团代运营示例数据
+├── excel-input/
+│   ├── 1/                           # 饿了么固定费用Excel
+│   ├── 2/                           # 饿了么代运营Excel
+│   ├── 3/                           # 美团代运营Excel
+│   ├── 4/                           # 美团线下收款Excel
+│   └── 5/                           # 美团退款Excel
 ├── scripts/                         # 命令行工具(可选使用)
 │   ├── processExcel.ts              # 饿了么固定费用处理脚本
 │   ├── processCycleExcel.ts         # 饿了么代运营处理脚本
 │   ├── processMeituanExcel.ts       # 美团代运营处理脚本
+│   ├── syncExcelToJson.ts           # 5目录Excel同步到JSON
 │   └── inspect*.ts                  # Excel查看工具
 ├── next.config.js                   # Next.js 配置(静态导出 + GitHub Pages)
 ├── package.json                     # 项目依赖

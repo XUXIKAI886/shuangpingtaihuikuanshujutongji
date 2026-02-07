@@ -23,7 +23,18 @@ export default function ClientHome() {
 
   // 从 localStorage 加载数据
   useEffect(() => {
-    const loadData = () => {
+    const isDailyDataArray = (value: unknown): value is DailyData[] => {
+      if (!Array.isArray(value)) return false;
+      return value.every(item => (
+        typeof item === 'object' &&
+        item !== null &&
+        typeof (item as DailyData).date === 'string' &&
+        typeof (item as DailyData).totalAmount === 'number' &&
+        typeof (item as DailyData).shopCount === 'number'
+      ));
+    };
+
+    const loadFromLocalStorage = () => {
       try {
         const fixed = localStorage.getItem('fixedFeeData');
         const elm = localStorage.getItem('elmCycleData');
@@ -31,21 +42,66 @@ export default function ClientHome() {
         const meituanOffline = localStorage.getItem('meituanOfflineData');
         const meituanRefund = localStorage.getItem('meituanRefundData');
 
-        if (fixed) setFixedFeeData(JSON.parse(fixed));
-        if (elm) setElmCycleData(JSON.parse(elm));
-        if (meituan) setMeituanData(JSON.parse(meituan));
-        if (meituanOffline) setMeituanOfflineData(JSON.parse(meituanOffline));
-        if (meituanRefund) setMeituanRefundData(JSON.parse(meituanRefund));
+        const fixedData = fixed ? JSON.parse(fixed) : null;
+        const elmData = elm ? JSON.parse(elm) : null;
+        const meituanData = meituan ? JSON.parse(meituan) : null;
+        const meituanOfflineData = meituanOffline ? JSON.parse(meituanOffline) : null;
+        const meituanRefundData = meituanRefund ? JSON.parse(meituanRefund) : null;
+
+        if (isDailyDataArray(fixedData)) setFixedFeeData(fixedData);
+        if (isDailyDataArray(elmData)) setElmCycleData(elmData);
+        if (isDailyDataArray(meituanData)) setMeituanData(meituanData);
+        if (isDailyDataArray(meituanOfflineData)) setMeituanOfflineData(meituanOfflineData);
+        if (isDailyDataArray(meituanRefundData)) setMeituanRefundData(meituanRefundData);
       } catch (error) {
         console.error('加载数据失败:', error);
       }
     };
 
-    loadData();
+    const loadData = async () => {
+      try {
+        const jsonTargets: Array<{
+          fileName: string;
+          apply: (data: DailyData[]) => void;
+        }> = [
+          { fileName: 'fixedFeeData.json', apply: setFixedFeeData },
+          { fileName: 'elmCycleData.json', apply: setElmCycleData },
+          { fileName: 'meituanData.json', apply: setMeituanData },
+          { fileName: 'meituanOfflineData.json', apply: setMeituanOfflineData },
+          { fileName: 'meituanRefundData.json', apply: setMeituanRefundData },
+        ];
+
+        let loadedFromJson = 0;
+
+        await Promise.all(
+          jsonTargets.map(async target => {
+            const jsonUrl = `data/${target.fileName}?t=${Date.now()}`;
+            const response = await fetch(jsonUrl, { cache: 'no-store' });
+
+            if (!response.ok) return;
+
+            const payload: unknown = await response.json();
+            if (!isDailyDataArray(payload)) return;
+
+            target.apply(payload);
+            loadedFromJson += 1;
+          })
+        );
+
+        if (loadedFromJson === 0) {
+          loadFromLocalStorage();
+        }
+      } catch (error) {
+        console.error('加载 JSON 数据失败，回退到 localStorage:', error);
+        loadFromLocalStorage();
+      }
+    };
+
+    void loadData();
 
     // 监听存储变化
     const handleStorageChange = () => {
-      loadData();
+      void loadData();
     };
 
     window.addEventListener('storage', handleStorageChange);
