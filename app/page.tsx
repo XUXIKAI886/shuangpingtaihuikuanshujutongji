@@ -1,5 +1,10 @@
 import ClientHome from "./components/ClientHome";
+import LoginGate from "./components/LoginGate";
 
 export default function Home() {
-  return <ClientHome />;
+  return (
+    <LoginGate>
+      <ClientHome />
+    </LoginGate>
+  );
 }
