@@ -1,5 +1,6 @@
 {
-  "updatedAt": "2026-02-07T01:49:16.516Z",
+  "mode": "append-by-date",
+  "updatedAt": "2026-02-07T02:18:54.958Z",
   "sourceRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input",
   "outputRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\public\\data",
   "items": [
@@ -8,8 +9,10 @@
       "label": "饿了么固定费用",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\1\\5349094916_20251023_20260123代运营固定费用账单_1769215492419.xlsx",
       "outputFile": "fixedFeeData.json",
+      "beforeDayCount": 70,
+      "appendedDayCount": 70,
+      "afterDayCount": 70,
       "recordCount": 946,
-      "dayCount": 70,
       "skipped": false
     },
     {
@@ -17,8 +20,10 @@
       "label": "饿了么代运营回款",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\2\\5349094916_20251106_20260206周期账单_1770425496224.xlsx",
       "outputFile": "elmCycleData.json",
+      "beforeDayCount": 93,
+      "appendedDayCount": 93,
+      "afterDayCount": 93,
       "recordCount": 11997,
-      "dayCount": 93,
       "skipped": false
     },
     {
@@ -26,8 +31,10 @@
       "label": "美团代运营回款",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\3\\[2238+代运营账单明细表20251106-20260206+下载日期_20260207].xls",
       "outputFile": "meituanData.json",
+      "beforeDayCount": 93,
+      "appendedDayCount": 93,
+      "afterDayCount": 93,
       "recordCount": 52233,
-      "dayCount": 93,
       "skipped": false
     },
     {
@@ -35,8 +42,10 @@
       "label": "美团线下收款",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\4\\美团线下收款.xlsx",
       "outputFile": "meituanOfflineData.json",
+      "beforeDayCount": 91,
+      "appendedDayCount": 91,
+      "afterDayCount": 91,
       "recordCount": 101,
-      "dayCount": 91,
       "skipped": false
     },
     {
@@ -44,8 +53,10 @@
       "label": "美团退款",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\5\\美团线下收款.xlsx",
       "outputFile": "meituanRefundData.json",
+      "beforeDayCount": 9,
+      "appendedDayCount": 9,
+      "afterDayCount": 9,
       "recordCount": 101,
-      "dayCount": 9,
       "skipped": false
     }
   ]

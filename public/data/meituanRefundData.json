@@ -1,47 +1,47 @@
 [
   {
     "date": "2025-12-09",
-    "totalAmount": 38,
+    "totalAmount": 76,
     "shopCount": 0
   },
   {
     "date": "2025-12-16",
-    "totalAmount": 50,
+    "totalAmount": 100,
     "shopCount": 0
   },
   {
     "date": "2025-12-17",
-    "totalAmount": 35,
+    "totalAmount": 70,
     "shopCount": 0
   },
   {
     "date": "2025-12-18",
-    "totalAmount": 8.43,
+    "totalAmount": 16.86,
     "shopCount": 0
   },
   {
     "date": "2025-12-22",
-    "totalAmount": 62.76,
+    "totalAmount": 125.52,
     "shopCount": 0
   },
   {
     "date": "2025-12-24",
-    "totalAmount": 282.12,
+    "totalAmount": 564.24,
     "shopCount": 0
   },
   {
     "date": "2025-12-30",
-    "totalAmount": 50,
+    "totalAmount": 100,
     "shopCount": 0
   },
   {
     "date": "2026-01-04",
-    "totalAmount": 166.91,
+    "totalAmount": 333.82,
     "shopCount": 0
   },
   {
     "date": "2026-01-08",
-    "totalAmount": 167.2,
+    "totalAmount": 334.4,
     "shopCount": 0
   }
 ]
