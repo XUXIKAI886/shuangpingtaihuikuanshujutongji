@@ -78,8 +78,17 @@ const readExistingJson = (filePath: string): DailyData[] => {
   }
 };
 
-const mergeAppendByDate = (existing: DailyData[], incoming: DailyData[]): DailyData[] => {
+const mergeAppendByDate = (
+  existing: DailyData[],
+  incoming: DailyData[]
+): {
+  mergedData: DailyData[];
+  appendedDayCount: number;
+  duplicateDayCount: number;
+} => {
   const dateMap = new Map<string, DailyData>();
+  let appendedDayCount = 0;
+  let duplicateDayCount = 0;
 
   for (const item of existing) {
     dateMap.set(item.date, {
@@ -97,14 +106,18 @@ const mergeAppendByDate = (existing: DailyData[], incoming: DailyData[]): DailyD
         totalAmount: item.totalAmount,
         shopCount: item.shopCount,
       });
+      appendedDayCount += 1;
       continue;
     }
 
-    found.totalAmount += item.totalAmount;
-    found.shopCount += item.shopCount;
+    duplicateDayCount += 1;
   }
 
-  return Array.from(dateMap.values()).sort((left, right) => left.date.localeCompare(right.date));
+  return {
+    mergedData: Array.from(dateMap.values()).sort((left, right) => left.date.localeCompare(right.date)),
+    appendedDayCount,
+    duplicateDayCount,
+  };
 };
 
 const runGit = (command: string): void => {
@@ -140,6 +153,7 @@ async function main() {
   }> = [];
 
   const changedFiles: string[] = [];
+  let hasAnyNewDate = false;
 
   for (const config of SOURCE_CONFIGS) {
     const inputDir = path.join(inputRoot, config.folder);
@@ -166,13 +180,21 @@ async function main() {
     const { dailyStats } = processDataByType(config.type, rawData);
     const outputPath = path.join(outputRoot, config.outputFile);
     const existingData = readExistingJson(outputPath);
-    const mergedData = mergeAppendByDate(existingData, dailyStats);
+    const { mergedData, appendedDayCount, duplicateDayCount } = mergeAppendByDate(existingData, dailyStats);
 
-    fs.writeFileSync(outputPath, JSON.stringify(mergedData, null, 2), 'utf-8');
-    changedFiles.push(outputPath);
+    if (appendedDayCount > 0) {
+      hasAnyNewDate = true;
+    }
+
+    const mergedJson = JSON.stringify(mergedData, null, 2);
+    const existingJson = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf-8') : '';
+    if (mergedJson !== existingJson) {
+      fs.writeFileSync(outputPath, mergedJson, 'utf-8');
+      changedFiles.push(outputPath);
+    }
 
     console.log(
-      `✅ ${config.label} 追加同步完成 -> ${config.outputFile}（源文件: ${path.basename(latestExcelPath)}，新增统计天数: ${dailyStats.length}，合并后天数: ${mergedData.length}）`
+      `✅ ${config.label} 追加同步完成 -> ${config.outputFile}（源文件: ${path.basename(latestExcelPath)}，新增天数: ${appendedDayCount}，重复跳过: ${duplicateDayCount}，合并后天数: ${mergedData.length}）`
     );
 
     summary.push({
@@ -181,11 +203,16 @@ async function main() {
       sourceFile: latestExcelPath,
       outputFile: config.outputFile,
       beforeDayCount: existingData.length,
-      appendedDayCount: dailyStats.length,
+      appendedDayCount,
       afterDayCount: mergedData.length,
       recordCount: rawData.length,
       skipped: false,
     });
+  }
+
+  if (!hasAnyNewDate) {
+    console.log('ℹ️ 本次未检测到新日期，已跳过写入与提交。');
+    return;
   }
 
   const metaPath = path.join(outputRoot, 'sync-meta.json');
@@ -193,7 +220,7 @@ async function main() {
     metaPath,
     JSON.stringify(
       {
-        mode: 'append-by-date',
+        mode: 'append-new-by-date',
         updatedAt: new Date().toISOString(),
         sourceRoot: inputRoot,
         outputRoot,

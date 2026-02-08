@@ -25,8 +25,8 @@ Use when the user asks to sync the latest five Excel folders into JSON and ship 
    - commit created when data changed
    - push status printed
 
-## Behavior
+## 行为说明
 
-- Sync mode is append-and-aggregate by date.
-- Commit message format follows repository style: `feat: ...`.
-- Push failure must return clear next steps (for auth setup).
+- 同步模式为按日期仅追加新数据（已存在日期跳过，不做累计）。
+- 提交信息沿用仓库风格：`feat: ...`。
+- 推送失败时必须返回明确下一步（认证后重试）。
