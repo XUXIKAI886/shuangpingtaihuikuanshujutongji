@@ -1,457 +1,457 @@
 [
   {
     "date": "2025-10-10",
-    "totalAmount": 560,
+    "totalAmount": 840,
     "shopCount": 0
   },
   {
     "date": "2025-10-11",
-    "totalAmount": 280,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-12",
-    "totalAmount": 210,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-13",
-    "totalAmount": 1370,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-14",
-    "totalAmount": 1778,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-15",
     "totalAmount": 420,
     "shopCount": 0
   },
   {
+    "date": "2025-10-12",
+    "totalAmount": 315,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-10-13",
+    "totalAmount": 2055,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-10-14",
+    "totalAmount": 2667,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-10-15",
+    "totalAmount": 630,
+    "shopCount": 0
+  },
+  {
     "date": "2025-10-16",
-    "totalAmount": 588,
+    "totalAmount": 882,
     "shopCount": 0
   },
   {
     "date": "2025-10-17",
-    "totalAmount": 562,
+    "totalAmount": 843,
     "shopCount": 0
   },
   {
     "date": "2025-10-18",
-    "totalAmount": 304,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-20",
-    "totalAmount": 608,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-21",
-    "totalAmount": 532,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-22",
-    "totalAmount": 650,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-23",
-    "totalAmount": 684,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-24",
-    "totalAmount": 1774,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-25",
-    "totalAmount": 602,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-27",
-    "totalAmount": 980,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-28",
-    "totalAmount": 1096,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-29",
-    "totalAmount": 1036,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-30",
-    "totalAmount": 2008,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-10-31",
-    "totalAmount": 1030,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-03",
-    "totalAmount": 1064,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-04",
-    "totalAmount": 1132,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-05",
     "totalAmount": 456,
     "shopCount": 0
   },
   {
-    "date": "2025-11-06",
-    "totalAmount": 1446,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-07",
-    "totalAmount": 704,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-08",
-    "totalAmount": 562,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-09",
-    "totalAmount": 304,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-10",
-    "totalAmount": 1068,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-11",
-    "totalAmount": 322,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-12",
-    "totalAmount": 836,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-13",
-    "totalAmount": 514,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-14",
-    "totalAmount": 836,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-15",
-    "totalAmount": 724,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-17",
-    "totalAmount": 532,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-18",
-    "totalAmount": 532,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-19",
-    "totalAmount": 782,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-11-20",
+    "date": "2025-10-20",
     "totalAmount": 912,
     "shopCount": 0
   },
   {
-    "date": "2025-11-21",
-    "totalAmount": 608,
+    "date": "2025-10-21",
+    "totalAmount": 798,
     "shopCount": 0
   },
   {
-    "date": "2025-11-22",
-    "totalAmount": 760,
+    "date": "2025-10-22",
+    "totalAmount": 975,
     "shopCount": 0
   },
   {
-    "date": "2025-11-24",
-    "totalAmount": 2586,
+    "date": "2025-10-23",
+    "totalAmount": 1026,
     "shopCount": 0
   },
   {
-    "date": "2025-11-25",
-    "totalAmount": 1288,
+    "date": "2025-10-24",
+    "totalAmount": 2661,
     "shopCount": 0
   },
   {
-    "date": "2025-11-26",
-    "totalAmount": 1288,
+    "date": "2025-10-25",
+    "totalAmount": 903,
     "shopCount": 0
   },
   {
-    "date": "2025-11-27",
-    "totalAmount": 632,
+    "date": "2025-10-27",
+    "totalAmount": 1470,
     "shopCount": 0
   },
   {
-    "date": "2025-11-28",
-    "totalAmount": 1242,
+    "date": "2025-10-28",
+    "totalAmount": 1644,
     "shopCount": 0
   },
   {
-    "date": "2025-11-29",
-    "totalAmount": 276,
+    "date": "2025-10-29",
+    "totalAmount": 1554,
     "shopCount": 0
   },
   {
-    "date": "2025-12-01",
-    "totalAmount": 1328,
+    "date": "2025-10-30",
+    "totalAmount": 3012,
     "shopCount": 0
   },
   {
-    "date": "2025-12-02",
-    "totalAmount": 200,
+    "date": "2025-10-31",
+    "totalAmount": 1545,
     "shopCount": 0
   },
   {
-    "date": "2025-12-03",
-    "totalAmount": 400,
+    "date": "2025-11-03",
+    "totalAmount": 1596,
     "shopCount": 0
   },
   {
-    "date": "2025-12-04",
-    "totalAmount": 2894,
+    "date": "2025-11-04",
+    "totalAmount": 1698,
     "shopCount": 0
   },
   {
-    "date": "2025-12-05",
-    "totalAmount": 1180,
+    "date": "2025-11-05",
+    "totalAmount": 684,
     "shopCount": 0
   },
   {
-    "date": "2025-12-06",
-    "totalAmount": 800,
+    "date": "2025-11-06",
+    "totalAmount": 2169,
     "shopCount": 0
   },
   {
-    "date": "2025-12-07",
-    "totalAmount": 176,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-08",
-    "totalAmount": 1400,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-09",
-    "totalAmount": 900,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-10",
-    "totalAmount": 804,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-11",
-    "totalAmount": 1328,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-12",
-    "totalAmount": 1152,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-13",
-    "totalAmount": 300,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-14",
-    "totalAmount": 300,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-15",
-    "totalAmount": 900,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-16",
-    "totalAmount": 1400,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-17",
-    "totalAmount": 1500,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-18",
-    "totalAmount": 1700,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-19",
-    "totalAmount": 900,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-20",
-    "totalAmount": 1196,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-21",
-    "totalAmount": 276,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-22",
-    "totalAmount": 1792,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-23",
-    "totalAmount": 1770,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-24",
-    "totalAmount": 3124,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-25",
-    "totalAmount": 1280,
-    "shopCount": 0
-  },
-  {
-    "date": "2025-12-26",
+    "date": "2025-11-07",
     "totalAmount": 1056,
     "shopCount": 0
   },
   {
+    "date": "2025-11-08",
+    "totalAmount": 843,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-09",
+    "totalAmount": 456,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-10",
+    "totalAmount": 1602,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-11",
+    "totalAmount": 483,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-12",
+    "totalAmount": 1254,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-13",
+    "totalAmount": 771,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-14",
+    "totalAmount": 1254,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-15",
+    "totalAmount": 1086,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-17",
+    "totalAmount": 798,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-18",
+    "totalAmount": 798,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-19",
+    "totalAmount": 1173,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-20",
+    "totalAmount": 1368,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-21",
+    "totalAmount": 912,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-22",
+    "totalAmount": 1140,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-24",
+    "totalAmount": 3879,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-25",
+    "totalAmount": 1932,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-26",
+    "totalAmount": 1932,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-27",
+    "totalAmount": 948,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-28",
+    "totalAmount": 1863,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-11-29",
+    "totalAmount": 414,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-01",
+    "totalAmount": 1992,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-02",
+    "totalAmount": 300,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-03",
+    "totalAmount": 600,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-04",
+    "totalAmount": 4341,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-05",
+    "totalAmount": 1770,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-06",
+    "totalAmount": 1200,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-07",
+    "totalAmount": 264,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-08",
+    "totalAmount": 2100,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-09",
+    "totalAmount": 1350,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-10",
+    "totalAmount": 1206,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-11",
+    "totalAmount": 1992,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-12",
+    "totalAmount": 1728,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-13",
+    "totalAmount": 450,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-14",
+    "totalAmount": 450,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-15",
+    "totalAmount": 1350,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-16",
+    "totalAmount": 2100,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-17",
+    "totalAmount": 2250,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-18",
+    "totalAmount": 2550,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-19",
+    "totalAmount": 1350,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-20",
+    "totalAmount": 1794,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-21",
+    "totalAmount": 414,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-22",
+    "totalAmount": 2688,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-23",
+    "totalAmount": 2655,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-24",
+    "totalAmount": 4686,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-25",
+    "totalAmount": 1920,
+    "shopCount": 0
+  },
+  {
+    "date": "2025-12-26",
+    "totalAmount": 1584,
+    "shopCount": 0
+  },
+  {
     "date": "2025-12-27",
-    "totalAmount": 880,
+    "totalAmount": 1320,
     "shopCount": 0
   },
   {
     "date": "2025-12-28",
-    "totalAmount": 576,
+    "totalAmount": 864,
     "shopCount": 0
   },
   {
     "date": "2025-12-29",
-    "totalAmount": 1848,
+    "totalAmount": 2772,
     "shopCount": 0
   },
   {
     "date": "2025-12-30",
-    "totalAmount": 3902,
+    "totalAmount": 5853,
     "shopCount": 0
   },
   {
     "date": "2025-12-31",
-    "totalAmount": 728,
+    "totalAmount": 1092,
     "shopCount": 0
   },
   {
     "date": "2026-01-04",
-    "totalAmount": 880,
+    "totalAmount": 1320,
     "shopCount": 0
   },
   {
     "date": "2026-01-05",
-    "totalAmount": 2060,
+    "totalAmount": 3090,
     "shopCount": 0
   },
   {
     "date": "2026-01-06",
-    "totalAmount": 1584,
+    "totalAmount": 2376,
     "shopCount": 0
   },
   {
     "date": "2026-01-07",
-    "totalAmount": 1584,
+    "totalAmount": 2376,
     "shopCount": 0
   },
   {
     "date": "2026-01-08",
-    "totalAmount": 1132,
+    "totalAmount": 1698,
     "shopCount": 0
   },
   {
     "date": "2026-01-09",
-    "totalAmount": 176,
+    "totalAmount": 264,
     "shopCount": 0
   },
   {
     "date": "2026-01-10",
-    "totalAmount": 1104,
+    "totalAmount": 1656,
     "shopCount": 0
   },
   {
     "date": "2026-01-11",
-    "totalAmount": 176,
+    "totalAmount": 264,
     "shopCount": 0
   },
   {
     "date": "2026-01-12",
-    "totalAmount": 1912,
+    "totalAmount": 2868,
     "shopCount": 0
   },
   {
     "date": "2026-01-13",
-    "totalAmount": 1232,
+    "totalAmount": 1848,
     "shopCount": 0
   },
   {
     "date": "2026-01-14",
-    "totalAmount": 804,
+    "totalAmount": 1206,
     "shopCount": 0
   },
   {
     "date": "2026-01-15",
-    "totalAmount": 176,
+    "totalAmount": 264,
     "shopCount": 0
   },
   {
     "date": "2026-01-16",
-    "totalAmount": 1760,
+    "totalAmount": 2640,
     "shopCount": 0
   },
   {
     "date": "2026-01-17",
-    "totalAmount": 950,
+    "totalAmount": 1425,
     "shopCount": 0
   },
   {
     "date": "2026-01-18",
-    "totalAmount": 352,
+    "totalAmount": 528,
     "shopCount": 0
   }
 ]
