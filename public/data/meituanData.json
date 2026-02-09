@@ -1,5 +1,165 @@
 [
   {
+    "date": "2025-10-04",
+    "totalAmount": 3287.6899999999987,
+    "shopCount": 282
+  },
+  {
+    "date": "2025-10-05",
+    "totalAmount": 2926.0699999999993,
+    "shopCount": 274
+  },
+  {
+    "date": "2025-10-06",
+    "totalAmount": 3080.5200000000004,
+    "shopCount": 234
+  },
+  {
+    "date": "2025-10-07",
+    "totalAmount": 3110.989999999998,
+    "shopCount": 261
+  },
+  {
+    "date": "2025-10-08",
+    "totalAmount": 2992.5999999999967,
+    "shopCount": 282
+  },
+  {
+    "date": "2025-10-09",
+    "totalAmount": 2781.2199999999984,
+    "shopCount": 290
+  },
+  {
+    "date": "2025-10-10",
+    "totalAmount": 3001.2699999999963,
+    "shopCount": 305
+  },
+  {
+    "date": "2025-10-11",
+    "totalAmount": 2765.1400000000003,
+    "shopCount": 289
+  },
+  {
+    "date": "2025-10-12",
+    "totalAmount": 3272.3799999999983,
+    "shopCount": 301
+  },
+  {
+    "date": "2025-10-13",
+    "totalAmount": 2923.7499999999973,
+    "shopCount": 277
+  },
+  {
+    "date": "2025-10-14",
+    "totalAmount": 2859.6399999999985,
+    "shopCount": 292
+  },
+  {
+    "date": "2025-10-15",
+    "totalAmount": 2853.399999999999,
+    "shopCount": 306
+  },
+  {
+    "date": "2025-10-16",
+    "totalAmount": 3138.3699999999967,
+    "shopCount": 298
+  },
+  {
+    "date": "2025-10-17",
+    "totalAmount": 3441.959999999999,
+    "shopCount": 296
+  },
+  {
+    "date": "2025-10-18",
+    "totalAmount": 3508.3699999999976,
+    "shopCount": 297
+  },
+  {
+    "date": "2025-10-19",
+    "totalAmount": 3313.4599999999978,
+    "shopCount": 285
+  },
+  {
+    "date": "2025-10-20",
+    "totalAmount": 3091.779999999998,
+    "shopCount": 290
+  },
+  {
+    "date": "2025-10-21",
+    "totalAmount": 3005.6599999999994,
+    "shopCount": 276
+  },
+  {
+    "date": "2025-10-22",
+    "totalAmount": 2912.7500000000023,
+    "shopCount": 276
+  },
+  {
+    "date": "2025-10-23",
+    "totalAmount": 2974.9800000000005,
+    "shopCount": 275
+  },
+  {
+    "date": "2025-10-24",
+    "totalAmount": 3059.3199999999943,
+    "shopCount": 275
+  },
+  {
+    "date": "2025-10-25",
+    "totalAmount": 3190.6899999999964,
+    "shopCount": 280
+  },
+  {
+    "date": "2025-10-26",
+    "totalAmount": 3314.7200000000003,
+    "shopCount": 292
+  },
+  {
+    "date": "2025-10-27",
+    "totalAmount": 2680.6699999999987,
+    "shopCount": 265
+  },
+  {
+    "date": "2025-10-28",
+    "totalAmount": 2799.0000000000005,
+    "shopCount": 264
+  },
+  {
+    "date": "2025-10-29",
+    "totalAmount": 2990.290000000002,
+    "shopCount": 267
+  },
+  {
+    "date": "2025-10-30",
+    "totalAmount": 3011.6200000000003,
+    "shopCount": 280
+  },
+  {
+    "date": "2025-10-31",
+    "totalAmount": 3078.579999999999,
+    "shopCount": 265
+  },
+  {
+    "date": "2025-11-01",
+    "totalAmount": 3292.7600000000016,
+    "shopCount": 279
+  },
+  {
+    "date": "2025-11-02",
+    "totalAmount": 3314.8399999999983,
+    "shopCount": 276
+  },
+  {
+    "date": "2025-11-03",
+    "totalAmount": 2866.119999999998,
+    "shopCount": 264
+  },
+  {
+    "date": "2025-11-04",
+    "totalAmount": 2658.639999999998,
+    "shopCount": 267
+  },
+  {
     "date": "2025-11-05",
     "totalAmount": 5291.959999999999,
     "shopCount": 522
