@@ -453,5 +453,15 @@
     "date": "2026-01-18",
     "totalAmount": 176,
     "shopCount": 0
+  },
+  {
+    "date": "2026-02-25",
+    "totalAmount": 238,
+    "shopCount": 0
+  },
+  {
+    "date": "2026-02-26",
+    "totalAmount": 88,
+    "shopCount": 0
   }
 ]
