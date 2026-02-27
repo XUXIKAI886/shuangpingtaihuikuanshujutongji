@@ -1,40 +1,40 @@
 {
   "mode": "append-new-by-date",
-  "updatedAt": "2026-02-26T01:11:17.634Z",
+  "updatedAt": "2026-02-27T01:14:58.894Z",
   "sourceRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input",
   "outputRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\public\\data",
   "items": [
     {
       "type": "fixedFee",
       "label": "饿了么固定费用",
-      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\1\\5349094916_20251125_20260225代运营固定费用账单_1772067638061.xlsx",
+      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\1\\5349094916_20251126_20260226代运营固定费用账单_1772153888898.xlsx",
       "outputFile": "fixedFeeData.json",
-      "beforeDayCount": 70,
-      "appendedDayCount": 1,
+      "beforeDayCount": 71,
+      "appendedDayCount": 0,
       "afterDayCount": 71,
-      "recordCount": 556,
+      "recordCount": 538,
       "skipped": false
     },
     {
       "type": "elmCycle",
       "label": "饿了么代运营回款",
-      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\2\\5349094916_20251125_20260225周期账单_1772067151629.xlsx",
+      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\2\\5349094916_20251126_20260226周期账单_1772153880743.xlsx",
       "outputFile": "elmCycleData.json",
-      "beforeDayCount": 143,
+      "beforeDayCount": 144,
       "appendedDayCount": 1,
-      "afterDayCount": 144,
-      "recordCount": 10657,
+      "afterDayCount": 145,
+      "recordCount": 10578,
       "skipped": false
     },
     {
       "type": "meituan",
       "label": "美团代运营回款",
-      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\3\\[2238+代运营账单明细表20251125-20260225+下载日期_20260226].xls",
+      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\3\\[2238+代运营账单明细表20251126-20260226+下载日期_20260227].xls",
       "outputFile": "meituanData.json",
-      "beforeDayCount": 143,
+      "beforeDayCount": 144,
       "appendedDayCount": 1,
-      "afterDayCount": 144,
-      "recordCount": 46632,
+      "afterDayCount": 145,
+      "recordCount": 46371,
       "skipped": false
     },
     {
