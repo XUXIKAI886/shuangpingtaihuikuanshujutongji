@@ -1,6 +1,6 @@
 {
   "mode": "append-new-by-date",
-  "updatedAt": "2026-03-01T01:25:54.856Z",
+  "updatedAt": "2026-03-01T02:00:52.635Z",
   "sourceRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input",
   "outputRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\public\\data",
   "items": [
@@ -9,8 +9,8 @@
       "label": "饿了么固定费用",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\1\\5349094916_20251128_20260228代运营固定费用账单_1772326883023.xlsx",
       "outputFile": "fixedFeeData.json",
-      "beforeDayCount": 72,
-      "appendedDayCount": 1,
+      "beforeDayCount": 73,
+      "appendedDayCount": 0,
       "afterDayCount": 73,
       "recordCount": 513,
       "skipped": false
@@ -20,8 +20,8 @@
       "label": "饿了么代运营回款",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\2\\5349094916_20251128_20260228周期账单_1772326883907.xlsx",
       "outputFile": "elmCycleData.json",
-      "beforeDayCount": 146,
-      "appendedDayCount": 1,
+      "beforeDayCount": 147,
+      "appendedDayCount": 0,
       "afterDayCount": 147,
       "recordCount": 10417,
       "skipped": false
@@ -31,8 +31,8 @@
       "label": "美团代运营回款",
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\3\\[2238+代运营账单明细表20251128-20260228+下载日期_20260301].xls",
       "outputFile": "meituanData.json",
-      "beforeDayCount": 146,
-      "appendedDayCount": 1,
+      "beforeDayCount": 147,
+      "appendedDayCount": 0,
       "afterDayCount": 147,
       "recordCount": 45811,
       "skipped": false
@@ -43,9 +43,9 @@
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\4\\美团线下收款.xlsx",
       "outputFile": "meituanOfflineData.json",
       "beforeDayCount": 93,
-      "appendedDayCount": 0,
-      "afterDayCount": 93,
-      "recordCount": 140,
+      "appendedDayCount": 1,
+      "afterDayCount": 94,
+      "recordCount": 142,
       "skipped": false
     },
     {
@@ -54,9 +54,9 @@
       "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\5\\美团线下收款.xlsx",
       "outputFile": "meituanRefundData.json",
       "beforeDayCount": 9,
-      "appendedDayCount": 0,
-      "afterDayCount": 9,
-      "recordCount": 140,
+      "appendedDayCount": 1,
+      "afterDayCount": 10,
+      "recordCount": 142,
       "skipped": false
     }
   ]
