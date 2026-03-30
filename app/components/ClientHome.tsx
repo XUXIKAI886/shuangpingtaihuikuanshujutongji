@@ -1,118 +1,26 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
+
 import AllPlatformsDailyStats from "./AllPlatformsDailyStats";
 import FileUpload from "./FileUpload";
 import ClearDataButton from "./ClearDataButton";
 import DailyCharts from "./DailyCharts";
 import { BarChart3, TrendingUp, DollarSign, Calendar } from "lucide-react";
-
-interface DailyData {
-  date: string;
-  totalAmount: number;
-  shopCount: number;
-}
+import { useDashboardData } from "@/app/hooks/useDashboardData";
+import type { DailyData } from "@/app/lib/dashboard/types";
 
 export default function ClientHome() {
-  const [fixedFeeData, setFixedFeeData] = useState<DailyData[]>([]);
-  const [elmCycleData, setElmCycleData] = useState<DailyData[]>([]);
-  const [meituanData, setMeituanData] = useState<DailyData[]>([]);
-  const [meituanOfflineData, setMeituanOfflineData] = useState<DailyData[]>([]);
-  const [meituanRefundData, setMeituanRefundData] = useState<DailyData[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('all'); // 'all' 或 'YYYY-MM' 格式
-
-  // 从 localStorage 加载数据
-  useEffect(() => {
-    const isDailyDataArray = (value: unknown): value is DailyData[] => {
-      if (!Array.isArray(value)) return false;
-      return value.every(item => (
-        typeof item === 'object' &&
-        item !== null &&
-        typeof (item as DailyData).date === 'string' &&
-        typeof (item as DailyData).totalAmount === 'number' &&
-        typeof (item as DailyData).shopCount === 'number'
-      ));
-    };
-
-    const loadFromLocalStorage = () => {
-      try {
-        const fixed = localStorage.getItem('fixedFeeData');
-        const elm = localStorage.getItem('elmCycleData');
-        const meituan = localStorage.getItem('meituanData');
-        const meituanOffline = localStorage.getItem('meituanOfflineData');
-        const meituanRefund = localStorage.getItem('meituanRefundData');
-
-        const fixedData = fixed ? JSON.parse(fixed) : null;
-        const elmData = elm ? JSON.parse(elm) : null;
-        const meituanData = meituan ? JSON.parse(meituan) : null;
-        const meituanOfflineData = meituanOffline ? JSON.parse(meituanOffline) : null;
-        const meituanRefundData = meituanRefund ? JSON.parse(meituanRefund) : null;
-
-        if (isDailyDataArray(fixedData)) setFixedFeeData(fixedData);
-        if (isDailyDataArray(elmData)) setElmCycleData(elmData);
-        if (isDailyDataArray(meituanData)) setMeituanData(meituanData);
-        if (isDailyDataArray(meituanOfflineData)) setMeituanOfflineData(meituanOfflineData);
-        if (isDailyDataArray(meituanRefundData)) setMeituanRefundData(meituanRefundData);
-      } catch (error) {
-        console.error('加载数据失败:', error);
-      }
-    };
-
-    const loadData = async () => {
-      try {
-        const jsonTargets: Array<{
-          fileName: string;
-          apply: (data: DailyData[]) => void;
-        }> = [
-          { fileName: 'fixedFeeData.json', apply: setFixedFeeData },
-          { fileName: 'elmCycleData.json', apply: setElmCycleData },
-          { fileName: 'meituanData.json', apply: setMeituanData },
-          { fileName: 'meituanOfflineData.json', apply: setMeituanOfflineData },
-          { fileName: 'meituanRefundData.json', apply: setMeituanRefundData },
-        ];
-
-        let loadedFromJson = 0;
-
-        await Promise.all(
-          jsonTargets.map(async target => {
-            const jsonUrl = `data/${target.fileName}?t=${Date.now()}`;
-            const response = await fetch(jsonUrl, { cache: 'no-store' });
-
-            if (!response.ok) return;
-
-            const payload: unknown = await response.json();
-            if (!isDailyDataArray(payload)) return;
-
-            target.apply(payload);
-            loadedFromJson += 1;
-          })
-        );
-
-        if (loadedFromJson === 0) {
-          loadFromLocalStorage();
-        }
-      } catch (error) {
-        console.error('加载 JSON 数据失败，回退到 localStorage:', error);
-        loadFromLocalStorage();
-      }
-    };
-
-    void loadData();
-
-    // 监听存储变化
-    const handleStorageChange = () => {
-      void loadData();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    // 自定义事件用于同一页面内的更新
-    window.addEventListener('dataUpdated', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('dataUpdated', handleStorageChange);
-    };
-  }, []);
+  const {
+    fixedFeeData,
+    elmCycleData,
+    meituanData,
+    meituanOfflineData,
+    meituanRefundData,
+    hasData,
+  } = useDashboardData();
 
   // 提取所有可用月份（从所有数据源）
   const availableMonths = useMemo(() => {
@@ -167,7 +75,15 @@ export default function ClientHome() {
                 </p>
               </div>
             </div>
-            <ClearDataButton />
+            <div className="flex items-center gap-3">
+              <Link
+                href="/summary"
+                className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-4 py-2 text-sm font-medium text-blue-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50"
+              >
+                查看汇总趋势
+              </Link>
+              <ClearDataButton />
+            </div>
           </div>
         </div>
 
@@ -271,7 +187,7 @@ export default function ClientHome() {
         <FileUpload />
 
         {/* 可视化图表 */}
-        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0 || meituanRefundData.length > 0) && (
+        {hasData && (
           <div className="mb-8">
             <DailyCharts
               fixedFeeData={filteredData.fixedFeeData}
@@ -283,7 +199,7 @@ export default function ClientHome() {
         )}
 
         {/* 每日统计表格 */}
-        {(fixedFeeData.length > 0 || elmCycleData.length > 0 || meituanData.length > 0 || meituanOfflineData.length > 0 || meituanRefundData.length > 0) && (
+        {hasData && (
           <div className="mb-8">
             <AllPlatformsDailyStats
               fixedFeeData={filteredData.fixedFeeData}
@@ -296,7 +212,7 @@ export default function ClientHome() {
         )}
 
         {/* 空状态提示 */}
-        {fixedFeeData.length === 0 && elmCycleData.length === 0 && meituanData.length === 0 && meituanOfflineData.length === 0 && meituanRefundData.length === 0 && (
+        {!hasData && (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <p className="text-gray-500 text-lg mb-4">暂无数据</p>
             <p className="text-gray-400">请上传 Excel 文件开始统计分析</p>
