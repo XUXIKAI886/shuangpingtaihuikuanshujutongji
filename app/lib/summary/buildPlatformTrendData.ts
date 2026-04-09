@@ -11,8 +11,8 @@ export interface PlatformTrendInput {
 export interface PlatformTrendRow {
   date: string;
   label: string;
-  elmTotal: number;
-  meituanTotal: number;
+  elmTotal: number | null;
+  meituanTotal: number | null;
   grandTotal: number;
   totalShopCount: number;
 }
@@ -53,18 +53,27 @@ export const buildPlatformTrendData = ({
   return Array.from(allDates)
     .sort((left, right) => left.localeCompare(right))
     .map(date => {
-      const elmTotal = (fixedFeeMap.get(date) ?? 0) + (elmCycleAmountMap.get(date) ?? 0);
-      const meituanTotal =
+      const hasElmData = fixedFeeMap.has(date) || elmCycleAmountMap.has(date);
+      const hasMeituanData =
+        meituanAmountMap.has(date) ||
+        meituanOfflineMap.has(date) ||
+        meituanRefundMap.has(date);
+
+      const elmAmount = (fixedFeeMap.get(date) ?? 0) + (elmCycleAmountMap.get(date) ?? 0);
+      const meituanAmount =
         (meituanAmountMap.get(date) ?? 0) +
         (meituanOfflineMap.get(date) ?? 0) -
         (meituanRefundMap.get(date) ?? 0);
+
+      const elmTotal = hasElmData ? elmAmount : null;
+      const meituanTotal = hasMeituanData ? meituanAmount : null;
 
       return {
         date,
         label: date.slice(5),
         elmTotal,
         meituanTotal,
-        grandTotal: elmTotal + meituanTotal,
+        grandTotal: (elmTotal ?? 0) + (meituanTotal ?? 0),
         totalShopCount: (elmCycleShopCountMap.get(date) ?? 0) + (meituanShopCountMap.get(date) ?? 0),
       };
     });

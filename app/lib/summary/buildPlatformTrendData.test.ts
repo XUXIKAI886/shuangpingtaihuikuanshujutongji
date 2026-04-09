@@ -46,9 +46,43 @@ test('汇总两个平台的每日趋势数据并扣除退款', () => {
       date: '2026-03-03',
       label: '03-03',
       elmTotal: 80,
-      meituanTotal: 0,
+      meituanTotal: null,
       grandTotal: 80,
       totalShopCount: 2,
+    },
+  ]);
+});
+
+test('缺少平台数据的日期不应伪装为 0', () => {
+  const result = buildPlatformTrendData({
+    fixedFeeData: [],
+    elmCycleData: [
+      { date: '2026-04-07', totalAmount: 620.91, shopCount: 103 },
+      { date: '2026-04-08', totalAmount: 617.88, shopCount: 110 },
+    ],
+    meituanData: [
+      { date: '2026-04-07', totalAmount: 1656.14, shopCount: 230 },
+    ],
+    meituanOfflineData: [],
+    meituanRefundData: [],
+  });
+
+  assert.deepEqual(result, [
+    {
+      date: '2026-04-07',
+      label: '04-07',
+      elmTotal: 620.91,
+      meituanTotal: 1656.14,
+      grandTotal: 2277.05,
+      totalShopCount: 333,
+    },
+    {
+      date: '2026-04-08',
+      label: '04-08',
+      elmTotal: 617.88,
+      meituanTotal: null,
+      grandTotal: 617.88,
+      totalShopCount: 110,
     },
   ]);
 });

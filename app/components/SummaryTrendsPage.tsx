@@ -27,8 +27,8 @@ export default function SummaryTrendsPage() {
   const totals = useMemo(() => {
     return trendData.reduce(
       (acc, item) => ({
-        elmTotal: acc.elmTotal + item.elmTotal,
-        meituanTotal: acc.meituanTotal + item.meituanTotal,
+        elmTotal: acc.elmTotal + (item.elmTotal ?? 0),
+        meituanTotal: acc.meituanTotal + (item.meituanTotal ?? 0),
         grandTotal: acc.grandTotal + item.grandTotal,
       }),
       { elmTotal: 0, meituanTotal: 0, grandTotal: 0 }

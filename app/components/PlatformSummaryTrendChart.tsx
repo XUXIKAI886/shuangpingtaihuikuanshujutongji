@@ -25,7 +25,7 @@ const SummaryTooltip = ({
   payload,
 }: {
   active?: boolean;
-  payload?: Array<{ value: number; color: string; name: string; payload: PlatformTrendRow }>;
+  payload?: Array<{ value: number | null; color: string; name: string; payload: PlatformTrendRow }>;
 }) => {
   if (!active || !payload?.length) {
     return null;
@@ -38,15 +38,17 @@ const SummaryTooltip = ({
       <p className="mb-3 text-sm font-bold text-slate-800">{trend.date}</p>
       <div className="space-y-2 text-sm">
         {payload.map(item => (
-          <div key={item.name} className="flex items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-slate-600">{item.name}</span>
-            </div>
-            <span className="font-semibold text-slate-900">{formatAmount(item.value)}</span>
+            <div key={item.name} className="flex items-center justify-between gap-6">
+              <div className="flex items-center gap-2">
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="text-slate-600">{item.name}</span>
+              </div>
+            <span className="font-semibold text-slate-900">
+              {typeof item.value === 'number' ? formatAmount(item.value) : '--'}
+            </span>
           </div>
         ))}
       </div>
@@ -97,7 +99,7 @@ export default function PlatformSummaryTrendChart({ data }: PlatformSummaryTrend
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip content={<SummaryTooltip />} />
+          <Tooltip filterNull content={<SummaryTooltip />} />
           <Legend wrapperStyle={{ paddingTop: 18, fontSize: 12 }} />
           <Area
             type="monotone"
