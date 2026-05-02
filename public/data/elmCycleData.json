@@ -1038,5 +1038,10 @@
     "date": "2026-04-30",
     "totalAmount": 1051.4299999999998,
     "shopCount": 190
+  },
+  {
+    "date": "2026-05-01",
+    "totalAmount": 1145.54,
+    "shopCount": 176
   }
 ]
