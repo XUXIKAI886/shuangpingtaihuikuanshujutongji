@@ -3,23 +3,59 @@ import * as path from 'path';
 import * as XLSX from 'xlsx';
 import { execSync } from 'child_process';
 import { processDataByType, UploadType, DailyData } from '../app/lib/upload/processors';
+import { DailyDataMergeMode, mergeDailyDataByDate } from './syncExcelMerge';
 
 type SourceConfig = {
   type: UploadType;
   folder: string;
   label: string;
   outputFile: string;
+  patterns: RegExp[];
+  mergeMode?: DailyDataMergeMode;
 };
 
 const SOURCE_CONFIGS: SourceConfig[] = [
-  { type: 'fixedFee', folder: '1', label: '饿了么固定费用', outputFile: 'fixedFeeData.json' },
-  { type: 'elmCycle', folder: '2', label: '饿了么代运营回款', outputFile: 'elmCycleData.json' },
-  { type: 'meituan', folder: '3', label: '美团代运营回款', outputFile: 'meituanData.json' },
-  { type: 'meituanOffline', folder: '4', label: '美团线下收款', outputFile: 'meituanOfflineData.json' },
-  { type: 'meituanRefund', folder: '5', label: '美团退款', outputFile: 'meituanRefundData.json' },
+  {
+    type: 'fixedFee',
+    folder: '1',
+    label: '饿了么固定费用',
+    outputFile: 'fixedFeeData.json',
+    patterns: [/固定费用/i],
+  },
+  {
+    type: 'elmCycle',
+    folder: '2',
+    label: '饿了么代运营回款',
+    outputFile: 'elmCycleData.json',
+    patterns: [/周期账单/i],
+    mergeMode: 'replace-existing-by-date',
+  },
+  {
+    type: 'meituan',
+    folder: '3',
+    label: '美团代运营回款',
+    outputFile: 'meituanData.json',
+    patterns: [/代运营账单明细表/i],
+  },
+  {
+    type: 'meituanOffline',
+    folder: '4',
+    label: '美团线下收款',
+    outputFile: 'meituanOfflineData.json',
+    patterns: [/线下收款/i],
+  },
+  {
+    type: 'meituanRefund',
+    folder: '5',
+    label: '美团退款',
+    outputFile: 'meituanRefundData.json',
+    patterns: [/退款/i, /线下收款/i],
+  },
 ];
 
 const EXCEL_EXTENSIONS = new Set(['.xlsx', '.xls']);
+const PUSH_REMOTE = 'https://XUXIKAI886@github.com/XUXIKAI886/shuangpingtaihuikuanshujutongji.git';
+const PUSH_BRANCH = 'master';
 
 const isExcelFile = (fileName: string): boolean => {
   const ext = path.extname(fileName).toLowerCase();
@@ -55,6 +91,66 @@ const ensureDir = (dirPath: string): void => {
   }
 };
 
+const listExcelCandidates = (dirPath: string): Array<{ fullPath: string; mtimeMs: number }> => {
+  if (!fs.existsSync(dirPath)) return [];
+
+  return fs.readdirSync(dirPath)
+    .filter(fileName => isExcelFile(fileName))
+    .map(fileName => {
+      const fullPath = path.join(dirPath, fileName);
+      const stat = fs.statSync(fullPath);
+      return { fullPath, mtimeMs: stat.mtimeMs, isFile: stat.isFile() };
+    })
+    .filter(item => item.isFile)
+    .map(({ fullPath, mtimeMs }) => ({ fullPath, mtimeMs }));
+};
+
+const findLatestMatchingExcelFile = (dirPaths: string[], patterns: RegExp[]): string | null => {
+  const normalizedPatterns = patterns.length > 0 ? patterns : [/.*/];
+
+  const candidates = dirPaths.flatMap(listExcelCandidates)
+    .filter(candidate => normalizedPatterns.some(pattern => pattern.test(path.basename(candidate.fullPath))));
+
+  candidates.sort((a, b) => b.mtimeMs - a.mtimeMs);
+  return candidates[0]?.fullPath ?? null;
+};
+
+const clearExcelFiles = (dirPath: string, keepFileName?: string): void => {
+  if (!fs.existsSync(dirPath)) return;
+
+  for (const fileName of fs.readdirSync(dirPath)) {
+    if (!isExcelFile(fileName)) continue;
+    if (keepFileName && fileName === keepFileName) continue;
+    fs.unlinkSync(path.join(dirPath, fileName));
+  }
+};
+
+const syncLatestSourceFile = (projectRoot: string, inputRoot: string, config: SourceConfig): string | null => {
+  const targetDir = path.join(inputRoot, config.folder);
+  ensureDir(targetDir);
+
+  const latestInputPath = findLatestMatchingExcelFile([targetDir], config.patterns);
+  const latestRootPath = findLatestMatchingExcelFile([projectRoot], config.patterns);
+  const latestSourcePath = latestInputPath ?? latestRootPath;
+  if (!latestSourcePath) {
+    return null;
+  }
+
+  const targetPath = path.join(targetDir, path.basename(latestSourcePath));
+  const shouldCopy = path.resolve(latestSourcePath) !== path.resolve(targetPath);
+
+  clearExcelFiles(targetDir, shouldCopy ? undefined : path.basename(targetPath));
+  if (shouldCopy) {
+    fs.copyFileSync(latestSourcePath, targetPath);
+    const sourceLabel = latestInputPath ? 'excel-input' : 'project-root';
+    console.log(`📥 已自动准备 ${config.label}：${path.basename(latestSourcePath)} (${sourceLabel}) -> excel-input/${config.folder}`);
+  } else {
+    console.log(`📦 已自动复用 ${config.label}：excel-input/${config.folder}/${path.basename(targetPath)}`);
+  }
+
+  return targetPath;
+};
+
 const isDailyDataArray = (value: unknown): value is DailyData[] => {
   if (!Array.isArray(value)) return false;
   return value.every(item => (
@@ -76,48 +172,6 @@ const readExistingJson = (filePath: string): DailyData[] => {
   } catch {
     return [];
   }
-};
-
-const mergeAppendByDate = (
-  existing: DailyData[],
-  incoming: DailyData[]
-): {
-  mergedData: DailyData[];
-  appendedDayCount: number;
-  duplicateDayCount: number;
-} => {
-  const dateMap = new Map<string, DailyData>();
-  let appendedDayCount = 0;
-  let duplicateDayCount = 0;
-
-  for (const item of existing) {
-    dateMap.set(item.date, {
-      date: item.date,
-      totalAmount: item.totalAmount,
-      shopCount: item.shopCount,
-    });
-  }
-
-  for (const item of incoming) {
-    const found = dateMap.get(item.date);
-    if (!found) {
-      dateMap.set(item.date, {
-        date: item.date,
-        totalAmount: item.totalAmount,
-        shopCount: item.shopCount,
-      });
-      appendedDayCount += 1;
-      continue;
-    }
-
-    duplicateDayCount += 1;
-  }
-
-  return {
-    mergedData: Array.from(dateMap.values()).sort((left, right) => left.date.localeCompare(right.date)),
-    appendedDayCount,
-    duplicateDayCount,
-  };
 };
 
 const runGit = (command: string): void => {
@@ -148,19 +202,20 @@ async function main() {
     appendedDayCount: number;
     afterDayCount: number;
     recordCount: number;
+    mergeMode?: DailyDataMergeMode;
+    replacedDayCount: number;
     skipped: boolean;
     reason?: string;
   }> = [];
 
   const changedFiles: string[] = [];
-  let hasAnyNewDate = false;
+  let hasAnyDataChange = false;
 
   for (const config of SOURCE_CONFIGS) {
-    const inputDir = path.join(inputRoot, config.folder);
-    const latestExcelPath = findLatestExcelFile(inputDir);
+    const latestExcelPath = syncLatestSourceFile(projectRoot, inputRoot, config);
 
     if (!latestExcelPath) {
-      console.log(`⚠️  跳过 ${config.label}：目录 ${inputDir} 下未找到 Excel 文件`);
+      console.log(`⚠️  跳过 ${config.label}：未找到可自动匹配的 Excel 文件`);
       summary.push({
         type: config.type,
         label: config.label,
@@ -170,8 +225,10 @@ async function main() {
         appendedDayCount: 0,
         afterDayCount: 0,
         recordCount: 0,
+        mergeMode: config.mergeMode ?? 'append-new-by-date',
+        replacedDayCount: 0,
         skipped: true,
-        reason: '未找到 Excel 文件',
+        reason: '未找到可自动匹配的 Excel 文件',
       });
       continue;
     }
@@ -180,10 +237,16 @@ async function main() {
     const { dailyStats } = processDataByType(config.type, rawData);
     const outputPath = path.join(outputRoot, config.outputFile);
     const existingData = readExistingJson(outputPath);
-    const { mergedData, appendedDayCount, duplicateDayCount } = mergeAppendByDate(existingData, dailyStats);
+    const mergeMode = config.mergeMode ?? 'append-new-by-date';
+    const {
+      mergedData,
+      appendedDayCount,
+      duplicateDayCount,
+      replacedDayCount,
+    } = mergeDailyDataByDate(existingData, dailyStats, mergeMode);
 
-    if (appendedDayCount > 0) {
-      hasAnyNewDate = true;
+    if (appendedDayCount > 0 || replacedDayCount > 0) {
+      hasAnyDataChange = true;
     }
 
     const mergedJson = JSON.stringify(mergedData, null, 2);
@@ -194,7 +257,7 @@ async function main() {
     }
 
     console.log(
-      `✅ ${config.label} 追加同步完成 -> ${config.outputFile}（源文件: ${path.basename(latestExcelPath)}，新增天数: ${appendedDayCount}，重复跳过: ${duplicateDayCount}，合并后天数: ${mergedData.length}）`
+      `✅ ${config.label} 同步完成 -> ${config.outputFile}（源文件: ${path.basename(latestExcelPath)}，模式: ${mergeMode}，新增天数: ${appendedDayCount}，重复日期: ${duplicateDayCount}，覆盖更新: ${replacedDayCount}，合并后天数: ${mergedData.length}）`
     );
 
     summary.push({
@@ -206,12 +269,14 @@ async function main() {
       appendedDayCount,
       afterDayCount: mergedData.length,
       recordCount: rawData.length,
+      mergeMode,
+      replacedDayCount,
       skipped: false,
     });
   }
 
-  if (!hasAnyNewDate) {
-    console.log('ℹ️ 本次未检测到新日期，已跳过写入与提交。');
+  if (!hasAnyDataChange) {
+    console.log('ℹ️ 本次未检测到新日期或历史日期更新，已跳过写入与提交。');
     return;
   }
 
@@ -220,7 +285,7 @@ async function main() {
     metaPath,
     JSON.stringify(
       {
-        mode: 'append-new-by-date',
+        mode: 'mixed-by-source',
         updatedAt: new Date().toISOString(),
         sourceRoot: inputRoot,
         outputRoot,
@@ -254,11 +319,11 @@ async function main() {
   runGit(`git commit -m "${commitMessage}"`);
 
   try {
-    runGit('git push origin master');
-    console.log('🚀 已推送到远程仓库 origin/master');
+    runGit(`git push "${PUSH_REMOTE}" ${PUSH_BRANCH}`);
+    console.log(`🚀 已推送到远程仓库 ${PUSH_REMOTE} ${PUSH_BRANCH}`);
   } catch {
     console.error('❌ 推送失败：请先完成认证后重试。');
-    console.error('下一步：在当前终端执行 git push origin master');
+    console.error(`下一步：在当前终端执行 git push "${PUSH_REMOTE}" ${PUSH_BRANCH}`);
     process.exit(1);
   }
 }
