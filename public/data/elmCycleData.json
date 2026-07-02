@@ -1336,12 +1336,17 @@
   },
   {
     "date": "2026-06-29",
-    "totalAmount": 1351.4499999999998,
-    "shopCount": 251
+    "totalAmount": 1353.9099999999999,
+    "shopCount": 252
   },
   {
     "date": "2026-06-30",
-    "totalAmount": 1372.8599999999988,
-    "shopCount": 248
+    "totalAmount": 1410.019999999999,
+    "shopCount": 249
+  },
+  {
+    "date": "2026-07-01",
+    "totalAmount": 1315.2199999999993,
+    "shopCount": 272
   }
 ]
