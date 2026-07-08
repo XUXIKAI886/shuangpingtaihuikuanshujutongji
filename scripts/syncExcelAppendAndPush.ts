@@ -12,6 +12,7 @@ type SourceConfig = {
   outputFile: string;
   patterns: RegExp[];
   mergeMode?: DailyDataMergeMode;
+  processAllInputFiles?: boolean;
 };
 
 const SOURCE_CONFIGS: SourceConfig[] = [
@@ -36,6 +37,8 @@ const SOURCE_CONFIGS: SourceConfig[] = [
     label: '美团代运营回款',
     outputFile: 'meituanData.json',
     patterns: [/代运营账单明细表/i],
+    mergeMode: 'replace-existing-by-date',
+    processAllInputFiles: true,
   },
   {
     type: 'meituanOffline',
@@ -115,6 +118,14 @@ const findLatestMatchingExcelFile = (dirPaths: string[], patterns: RegExp[]): st
   return candidates[0]?.fullPath ?? null;
 };
 
+const findMatchingExcelFiles = (dirPath: string, patterns: RegExp[]): string[] => {
+  const normalizedPatterns = patterns.length > 0 ? patterns : [/.*/];
+  return listExcelCandidates(dirPath)
+    .filter(candidate => normalizedPatterns.some(pattern => pattern.test(path.basename(candidate.fullPath))))
+    .sort((a, b) => a.mtimeMs - b.mtimeMs)
+    .map(candidate => candidate.fullPath);
+};
+
 const clearExcelFiles = (dirPath: string, keepFileName?: string): void => {
   if (!fs.existsSync(dirPath)) return;
 
@@ -149,6 +160,34 @@ const syncLatestSourceFile = (projectRoot: string, inputRoot: string, config: So
   }
 
   return targetPath;
+};
+
+const syncSourceFiles = (projectRoot: string, inputRoot: string, config: SourceConfig): string[] => {
+  if (!config.processAllInputFiles) {
+    const sourceFile = syncLatestSourceFile(projectRoot, inputRoot, config);
+    return sourceFile ? [sourceFile] : [];
+  }
+
+  const targetDir = path.join(inputRoot, config.folder);
+  ensureDir(targetDir);
+
+  const inputFiles = findMatchingExcelFiles(targetDir, config.patterns);
+  if (inputFiles.length > 0) {
+    console.log(`📦 已自动复用 ${config.label}：excel-input/${config.folder} 共 ${inputFiles.length} 个文件`);
+    return inputFiles;
+  }
+
+  const latestRootPath = findLatestMatchingExcelFile([projectRoot], config.patterns);
+  if (!latestRootPath) {
+    return [];
+  }
+
+  const targetPath = path.join(targetDir, path.basename(latestRootPath));
+  clearExcelFiles(targetDir);
+  fs.copyFileSync(latestRootPath, targetPath);
+  console.log(`📥 已自动准备 ${config.label}：${path.basename(latestRootPath)} (project-root) -> excel-input/${config.folder}`);
+
+  return [targetPath];
 };
 
 const isDailyDataArray = (value: unknown): value is DailyData[] => {
@@ -212,9 +251,9 @@ async function main() {
   let hasAnyDataChange = false;
 
   for (const config of SOURCE_CONFIGS) {
-    const latestExcelPath = syncLatestSourceFile(projectRoot, inputRoot, config);
+    const sourceExcelPaths = syncSourceFiles(projectRoot, inputRoot, config);
 
-    if (!latestExcelPath) {
+    if (sourceExcelPaths.length === 0) {
       console.log(`⚠️  跳过 ${config.label}：未找到可自动匹配的 Excel 文件`);
       summary.push({
         type: config.type,
@@ -233,8 +272,14 @@ async function main() {
       continue;
     }
 
-    const rawData = readExcel(latestExcelPath);
-    const { dailyStats } = processDataByType(config.type, rawData);
+    let recordCount = 0;
+    let dailyStats: DailyData[] = [];
+    for (const excelPath of sourceExcelPaths) {
+      const rawData = readExcel(excelPath);
+      const processed = processDataByType(config.type, rawData).dailyStats;
+      recordCount += rawData.length;
+      dailyStats = mergeDailyDataByDate(dailyStats, processed, 'replace-existing-by-date').mergedData;
+    }
     const outputPath = path.join(outputRoot, config.outputFile);
     const existingData = readExistingJson(outputPath);
     const mergeMode = config.mergeMode ?? 'append-new-by-date';
@@ -257,18 +302,18 @@ async function main() {
     }
 
     console.log(
-      `✅ ${config.label} 同步完成 -> ${config.outputFile}（源文件: ${path.basename(latestExcelPath)}，模式: ${mergeMode}，新增天数: ${appendedDayCount}，重复日期: ${duplicateDayCount}，覆盖更新: ${replacedDayCount}，合并后天数: ${mergedData.length}）`
+      `✅ ${config.label} 同步完成 -> ${config.outputFile}（源文件: ${sourceExcelPaths.map(filePath => path.basename(filePath)).join(', ')}，模式: ${mergeMode}，新增天数: ${appendedDayCount}，重复日期: ${duplicateDayCount}，覆盖更新: ${replacedDayCount}，合并后天数: ${mergedData.length}）`
     );
 
     summary.push({
       type: config.type,
       label: config.label,
-      sourceFile: latestExcelPath,
+      sourceFile: sourceExcelPaths.join('; '),
       outputFile: config.outputFile,
       beforeDayCount: existingData.length,
       appendedDayCount,
       afterDayCount: mergedData.length,
-      recordCount: rawData.length,
+      recordCount,
       mergeMode,
       replacedDayCount,
       skipped: false,

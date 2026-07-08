@@ -13,6 +13,28 @@ export interface DailyData {
 const FIXED_FEE_AMOUNTS = [33.95, 36.86, 38.80, 48.5, 85.36, 193.03];
 
 const EXCEL_BASE_DATE = new Date(1900, 0, 1);
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+const getFirstPresentValue = (row: any, keys: string[]): unknown =>
+  keys
+    .map(key => row[key])
+    .find(value => value !== undefined && value !== null && value.toString().trim() !== '');
+
+const parseAmount = (value: unknown): number => {
+  const normalized = value?.toString()
+    .replace(/,/g, '')
+    .replace(/[¥￥]/g, '')
+    .trim() || '';
+  const parsed = parseFloat(normalized);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const formatDateKey = (value: Date): string => {
+  const year = value.getFullYear();
+  const month = `${value.getMonth() + 1}`.padStart(2, '0');
+  const day = `${value.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const mapToDailyStats = (dailyMap: Map<string, { amount: number; shops: Set<string> }>): DailyData[] =>
   Array.from(dailyMap.entries())
@@ -28,7 +50,24 @@ const parseExcelDate = (value: number | string): Date => {
   if (typeof value === 'number') {
     // Excel 将 1900 错误视为闰年，因此需要减去 1 天
     const daysOffset = value - 1;
-    return new Date(EXCEL_BASE_DATE.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+    return new Date(EXCEL_BASE_DATE.getTime() + daysOffset * MS_PER_DAY);
+  }
+  const rawValue = value.toString().trim();
+  const dateOnlyMatch = rawValue.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+  if (dateOnlyMatch) {
+    return new Date(
+      Number(dateOnlyMatch[1]),
+      Number(dateOnlyMatch[2]) - 1,
+      Number(dateOnlyMatch[3])
+    );
+  }
+  const compactDateMatch = rawValue.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (compactDateMatch) {
+    return new Date(
+      Number(compactDateMatch[1]),
+      Number(compactDateMatch[2]) - 1,
+      Number(compactDateMatch[3])
+    );
   }
   return new Date(value);
 };
@@ -100,16 +139,19 @@ export const processElmCycleData = (rawData: any[]): DailyData[] => {
 export const processMeituanData = (rawData: any[]): DailyData[] => {
   const dailyMap = new Map<string, { amount: number; shops: Set<string> }>();
 
-  rawData.slice(1).forEach(row => {
-    const rawDate = row['代运营账单']?.toString() || '';
-    const shopId = row['_1']?.toString() || '';
-    const settlementAmount = parseFloat(row['_4']?.toString() || '0');
+  rawData.forEach(row => {
+    const rawDateValue = getFirstPresentValue(row, ['日期', '代运营账单']);
+    const shopId = getFirstPresentValue(row, ['门店ID', '店铺ID', '_1'])?.toString() || '';
+    const settlementAmount = parseAmount(
+      getFirstPresentValue(row, ['结算金额(元)', '结算金额', '_4'])
+    );
 
-    if (!rawDate || settlementAmount === 0) return;
+    if (!rawDateValue || settlementAmount === 0) return;
 
-    const dateObj = new Date(rawDate);
+    const dateObj = parseExcelDate(rawDateValue as number | string);
+    if (Number.isNaN(dateObj.getTime())) return;
     dateObj.setDate(dateObj.getDate() - 1);
-    const date = dateObj.toISOString().split('T')[0];
+    const date = formatDateKey(dateObj);
 
     if (!dailyMap.has(date)) {
       dailyMap.set(date, { amount: 0, shops: new Set() });
