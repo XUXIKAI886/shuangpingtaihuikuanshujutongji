@@ -10,11 +10,17 @@ export async function POST() {
     // 空数据结构
     const emptyData: any[] = [];
 
-    // 清空三个数据文件
+    // 清空当前页面读取的统一数据文件；旧文件一并清空，避免历史页面或缓存入口读到旧口径。
     const files = [
-      'daily-stats.json',           // 饿了么固定费用
-      'cycle-daily-stats.json',     // 饿了么代运营
-      'meituan-daily-stats.json'    // 美团代运营
+      'fixedFeeData.json',
+      'elmCycleData.json',
+      'meituanData.json',
+      'meituanOfflineData.json',
+      'meituanRefundData.json',
+      'daily-stats.json',
+      'cycle-daily-stats.json',
+      'meituan-daily-stats.json',
+      'shop-stats.json',
     ];
 
     for (const file of files) {

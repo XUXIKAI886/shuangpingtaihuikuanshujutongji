@@ -33,6 +33,9 @@ Use when the user asks to sync the latest five Excel folders into JSON and ship 
   - 其他数据仍按日期仅追加新数据（已存在日期跳过，不做累计）。
 - 现在默认会优先使用 `excel-input/1~5` 中你已替换好的文件；只有对应目录没有匹配文件时，才会回退到项目根目录自动匹配。
 - 美团代运营账单第一行通常是“代运营账单”标题、第二行才是真实表头；解析时必须兼容 `日期/门店ID/结算金额(元)` 真实表头和 `代运营账单/_1/_4` 旧错位字段，禁止只依赖单一错位字段。
+- 页面、浏览器上传接口和自动同步脚本必须统一使用 `app/lib/upload/processors.ts` 的 `processDataByType`，禁止在 `app/api/upload/route.ts`、脚本或组件中复制一套美团解析逻辑。
+- 当前页面读取的标准文件名是 `fixedFeeData.json`、`elmCycleData.json`、`meituanData.json`、`meituanOfflineData.json`、`meituanRefundData.json`；禁止让新上传或同步流程继续写 `daily-stats.json`、`cycle-daily-stats.json`、`meituan-daily-stats.json` 作为页面数据源，避免同一天不同页面读到不同口径。
+- 如发现“有的页面对、有的页面错”，先核对 `useDashboardData.ts`、`app/api/upload/route.ts`、`public/data/*.json` 与浏览器 `localStorage` 是否都指向同一套标准 storageKey/fileName。
 - 提交信息沿用仓库风格：`feat: ...`。
 - 推送必须使用：`git push "https://XUXIKAI886@github.com/XUXIKAI886/shuangpingtaihuikuanshujutongji.git" master`
 - 不要使用 `git push origin master`，否则可能命中错误的本机默认账号并导致无权限。
@@ -45,6 +48,7 @@ Use when the user asks to sync the latest five Excel folders into JSON and ship 
 - 五个 `excel-input/1~5` 实际复用的文件名
 - 每类数据的新增天数、重复日期数、覆盖更新天数、合并后天数；饿了么代运营回款和美团代运营回款必须关注 `覆盖更新` 是否反映历史账单回溯修正或单日补查修正
 - 美团代运营回款如有多个 `excel-input/3` 文件，必须记录全部参与同步的文件名，并抽查目标日期的 `totalAmount` 与 `shopCount`
+- 若修改上传、清空或页面读取链路，必须同时验证 `localStorage` key、API 输出文件名和页面读取 JSON 文件名一致；清空功能必须覆盖 `meituanRefundData` 和所有旧遗留文件。
 - `sync-meta.json` 是否写入
 - commit hash 和显式远程 URL 的 push 输出
 - 如果最终 `git status` 相对本地 `origin/master` 显示 `ahead`，必须用 `git ls-remote "https://XUXIKAI886@github.com/XUXIKAI886/shuangpingtaihuikuanshujutongji.git" refs/heads/master` 验证远端 `master` hash 等于本次 commit；相等则不得因本地 `origin` 状态误判失败
