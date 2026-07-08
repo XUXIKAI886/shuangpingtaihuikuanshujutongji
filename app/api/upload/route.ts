@@ -13,6 +13,12 @@ const SUPPORTED_TYPES: UploadType[] = [
   'meituanRefund',
 ];
 
+const LEGACY_OUTPUT_FILES: Partial<Record<UploadType, string>> = {
+  fixedFee: 'daily-stats.json',
+  elmCycle: 'cycle-daily-stats.json',
+  meituan: 'meituan-daily-stats.json',
+};
+
 const isUploadType = (value: FormDataEntryValue | null): value is UploadType =>
   typeof value === 'string' && SUPPORTED_TYPES.includes(value as UploadType);
 
@@ -43,16 +49,23 @@ export async function POST(request: NextRequest) {
     }
 
     const outputFile = `${storageKey}.json`;
+    const outputJson = JSON.stringify(dailyStats, null, 2);
     fs.writeFileSync(
       path.join(outputDir, outputFile),
-      JSON.stringify(dailyStats, null, 2),
+      outputJson,
       'utf-8'
     );
+
+    const legacyOutputFile = LEGACY_OUTPUT_FILES[dataType];
+    if (legacyOutputFile) {
+      fs.writeFileSync(path.join(outputDir, legacyOutputFile), outputJson, 'utf-8');
+    }
 
     return NextResponse.json({
       success: true,
       message: '文件上传并处理成功',
       outputFile,
+      legacyOutputFile,
       storageKey,
       stats: {
         totalRecords: rawData.length,

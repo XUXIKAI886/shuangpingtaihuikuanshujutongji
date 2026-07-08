@@ -10,6 +10,7 @@ type SourceConfig = {
   folder: string;
   label: string;
   outputFile: string;
+  legacyOutputFile?: string;
   patterns: RegExp[];
   mergeMode?: DailyDataMergeMode;
   processAllInputFiles?: boolean;
@@ -21,6 +22,7 @@ const SOURCE_CONFIGS: SourceConfig[] = [
     folder: '1',
     label: '饿了么固定费用',
     outputFile: 'fixedFeeData.json',
+    legacyOutputFile: 'daily-stats.json',
     patterns: [/固定费用/i],
   },
   {
@@ -28,6 +30,7 @@ const SOURCE_CONFIGS: SourceConfig[] = [
     folder: '2',
     label: '饿了么代运营回款',
     outputFile: 'elmCycleData.json',
+    legacyOutputFile: 'cycle-daily-stats.json',
     patterns: [/周期账单/i],
     mergeMode: 'replace-existing-by-date',
   },
@@ -36,6 +39,7 @@ const SOURCE_CONFIGS: SourceConfig[] = [
     folder: '3',
     label: '美团代运营回款',
     outputFile: 'meituanData.json',
+    legacyOutputFile: 'meituan-daily-stats.json',
     patterns: [/代运营账单明细表/i],
     mergeMode: 'replace-existing-by-date',
     processAllInputFiles: true,
@@ -213,6 +217,19 @@ const readExistingJson = (filePath: string): DailyData[] => {
   }
 };
 
+const writeJsonIfChanged = (
+  filePath: string,
+  json: string,
+  changedFiles: string[]
+): boolean => {
+  const existingJson = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
+  if (json === existingJson) return false;
+
+  fs.writeFileSync(filePath, json, 'utf-8');
+  changedFiles.push(filePath);
+  return true;
+};
+
 const runGit = (command: string): void => {
   execSync(command, { stdio: 'inherit' });
 };
@@ -237,6 +254,7 @@ async function main() {
     label: string;
     sourceFile: string | null;
     outputFile: string;
+    legacyOutputFile?: string;
     beforeDayCount: number;
     appendedDayCount: number;
     afterDayCount: number;
@@ -295,10 +313,16 @@ async function main() {
     }
 
     const mergedJson = JSON.stringify(mergedData, null, 2);
-    const existingJson = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf-8') : '';
-    if (mergedJson !== existingJson) {
-      fs.writeFileSync(outputPath, mergedJson, 'utf-8');
-      changedFiles.push(outputPath);
+    if (writeJsonIfChanged(outputPath, mergedJson, changedFiles)) {
+      hasAnyDataChange = true;
+    }
+
+    if (config.legacyOutputFile) {
+      const legacyOutputPath = path.join(outputRoot, config.legacyOutputFile);
+      if (writeJsonIfChanged(legacyOutputPath, mergedJson, changedFiles)) {
+        hasAnyDataChange = true;
+        console.log(`🪞 已同步旧兼容文件: ${config.legacyOutputFile} -> ${config.outputFile}`);
+      }
     }
 
     console.log(
@@ -310,6 +334,7 @@ async function main() {
       label: config.label,
       sourceFile: sourceExcelPaths.join('; '),
       outputFile: config.outputFile,
+      legacyOutputFile: config.legacyOutputFile,
       beforeDayCount: existingData.length,
       appendedDayCount,
       afterDayCount: mergedData.length,
