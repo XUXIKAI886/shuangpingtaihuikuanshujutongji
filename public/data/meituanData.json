@@ -2786,7 +2786,7 @@
   },
   {
     "date": "2026-08-15",
-    "totalAmount": 3398.2099999999987,
+    "totalAmount": 3398.21,
     "shopCount": 377
   },
   {
@@ -2796,7 +2796,7 @@
   },
   {
     "date": "2026-08-17",
-    "totalAmount": 3028.8099999999995,
+    "totalAmount": 3028.8100000000045,
     "shopCount": 369
   },
   {
@@ -2806,12 +2806,12 @@
   },
   {
     "date": "2026-08-19",
-    "totalAmount": 3124.6699999999983,
+    "totalAmount": 3124.6699999999987,
     "shopCount": 368
   },
   {
     "date": "2026-08-20",
-    "totalAmount": 3231.190000000001,
+    "totalAmount": 3231.190000000006,
     "shopCount": 394
   },
   {
@@ -2836,7 +2836,7 @@
   },
   {
     "date": "2026-08-25",
-    "totalAmount": 3004.5699999999983,
+    "totalAmount": 3004.570000000001,
     "shopCount": 362
   },
   {
@@ -2876,12 +2876,12 @@
   },
   {
     "date": "2026-09-02",
-    "totalAmount": 2662.0400000000027,
+    "totalAmount": 2662.0400000000004,
     "shopCount": 349
   },
   {
     "date": "2026-09-03",
-    "totalAmount": 2590.890000000002,
+    "totalAmount": 2590.8900000000017,
     "shopCount": 346
   },
   {
@@ -2891,12 +2891,12 @@
   },
   {
     "date": "2026-09-05",
-    "totalAmount": 3051.18,
+    "totalAmount": 3051.180000000003,
     "shopCount": 362
   },
   {
     "date": "2026-09-06",
-    "totalAmount": 2833.0399999999986,
+    "totalAmount": 2833.04,
     "shopCount": 363
   },
   {
@@ -2916,7 +2916,7 @@
   },
   {
     "date": "2026-09-10",
-    "totalAmount": 2604.490000000002,
+    "totalAmount": 2604.4899999999993,
     "shopCount": 353
   },
   {
@@ -2926,17 +2926,22 @@
   },
   {
     "date": "2026-09-12",
-    "totalAmount": 2900.070000000003,
+    "totalAmount": 2900.0700000000033,
     "shopCount": 364
   },
   {
     "date": "2026-09-13",
-    "totalAmount": 3031.230000000003,
+    "totalAmount": 3031.2299999999987,
     "shopCount": 374
   },
   {
     "date": "2026-09-14",
     "totalAmount": 2797.2400000000002,
     "shopCount": 367
+  },
+  {
+    "date": "2026-09-15",
+    "totalAmount": 2905.509999999997,
+    "shopCount": 370
   }
 ]
