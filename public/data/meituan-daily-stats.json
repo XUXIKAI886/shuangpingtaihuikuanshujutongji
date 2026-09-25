@@ -2826,12 +2826,12 @@
   },
   {
     "date": "2026-08-23",
-    "totalAmount": 3262.570000000002,
+    "totalAmount": 3262.5699999999993,
     "shopCount": 374
   },
   {
     "date": "2026-08-24",
-    "totalAmount": 3048.170000000001,
+    "totalAmount": 3048.170000000002,
     "shopCount": 361
   },
   {
@@ -2851,7 +2851,7 @@
   },
   {
     "date": "2026-08-28",
-    "totalAmount": 2939.029999999999,
+    "totalAmount": 2939.0299999999997,
     "shopCount": 353
   },
   {
@@ -2876,12 +2876,12 @@
   },
   {
     "date": "2026-09-02",
-    "totalAmount": 2662.0400000000004,
+    "totalAmount": 2662.0400000000027,
     "shopCount": 349
   },
   {
     "date": "2026-09-03",
-    "totalAmount": 2590.8900000000017,
+    "totalAmount": 2590.890000000002,
     "shopCount": 346
   },
   {
@@ -2891,22 +2891,22 @@
   },
   {
     "date": "2026-09-05",
-    "totalAmount": 3051.180000000003,
+    "totalAmount": 3051.18,
     "shopCount": 362
   },
   {
     "date": "2026-09-06",
-    "totalAmount": 2833.0399999999986,
+    "totalAmount": 2833.04,
     "shopCount": 363
   },
   {
     "date": "2026-09-07",
-    "totalAmount": 2482.2400000000034,
+    "totalAmount": 2482.240000000003,
     "shopCount": 346
   },
   {
     "date": "2026-09-08",
-    "totalAmount": 2655.660000000005,
+    "totalAmount": 2655.6600000000008,
     "shopCount": 368
   },
   {
@@ -2926,12 +2926,12 @@
   },
   {
     "date": "2026-09-12",
-    "totalAmount": 2900.070000000003,
+    "totalAmount": 2900.0700000000033,
     "shopCount": 364
   },
   {
     "date": "2026-09-13",
-    "totalAmount": 3031.230000000003,
+    "totalAmount": 3031.2299999999987,
     "shopCount": 374
   },
   {
@@ -2946,12 +2946,12 @@
   },
   {
     "date": "2026-09-16",
-    "totalAmount": 2694.7500000000014,
+    "totalAmount": 2694.749999999998,
     "shopCount": 392
   },
   {
     "date": "2026-09-17",
-    "totalAmount": 3006.4899999999952,
+    "totalAmount": 3006.489999999995,
     "shopCount": 399
   },
   {
@@ -2966,17 +2966,22 @@
   },
   {
     "date": "2026-09-20",
-    "totalAmount": 3201.949999999995,
+    "totalAmount": 3201.949999999994,
     "shopCount": 382
   },
   {
     "date": "2026-09-21",
-    "totalAmount": 3324.729999999999,
+    "totalAmount": 3324.7299999999996,
     "shopCount": 405
   },
   {
     "date": "2026-09-22",
     "totalAmount": 3083.1499999999983,
     "shopCount": 395
+  },
+  {
+    "date": "2026-09-23",
+    "totalAmount": 3198.509999999999,
+    "shopCount": 406
   }
 ]
