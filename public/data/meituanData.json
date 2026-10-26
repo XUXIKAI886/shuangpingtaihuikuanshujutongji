@@ -2986,22 +2986,22 @@
   },
   {
     "date": "2026-09-24",
-    "totalAmount": 3285.289999999997,
+    "totalAmount": 3285.2899999999963,
     "shopCount": 423
   },
   {
     "date": "2026-09-25",
-    "totalAmount": 3376.3199999999956,
+    "totalAmount": 3376.320000000001,
     "shopCount": 380
   },
   {
     "date": "2026-09-26",
-    "totalAmount": 3511.649999999998,
+    "totalAmount": 3511.649999999997,
     "shopCount": 395
   },
   {
     "date": "2026-09-27",
-    "totalAmount": 3691.3599999999965,
+    "totalAmount": 3691.359999999995,
     "shopCount": 386
   },
   {
@@ -3011,7 +3011,7 @@
   },
   {
     "date": "2026-09-29",
-    "totalAmount": 3216.0100000000025,
+    "totalAmount": 3216.0099999999998,
     "shopCount": 409
   },
   {
@@ -3021,7 +3021,7 @@
   },
   {
     "date": "2026-10-01",
-    "totalAmount": 3370.779999999997,
+    "totalAmount": 3370.780000000002,
     "shopCount": 371
   },
   {
@@ -3031,37 +3031,37 @@
   },
   {
     "date": "2026-10-03",
-    "totalAmount": 3649.8799999999947,
+    "totalAmount": 3649.8800000000006,
     "shopCount": 358
   },
   {
     "date": "2026-10-04",
-    "totalAmount": 3447.48,
+    "totalAmount": 3447.4799999999977,
     "shopCount": 357
   },
   {
     "date": "2026-10-05",
-    "totalAmount": 3094.619999999997,
+    "totalAmount": 3094.6199999999967,
     "shopCount": 338
   },
   {
     "date": "2026-10-06",
-    "totalAmount": 3068.5399999999986,
+    "totalAmount": 3068.5400000000013,
     "shopCount": 345
   },
   {
     "date": "2026-10-07",
-    "totalAmount": 3075.629999999998,
+    "totalAmount": 3075.6300000000015,
     "shopCount": 365
   },
   {
     "date": "2026-10-08",
-    "totalAmount": 2871.799999999999,
+    "totalAmount": 2871.8000000000015,
     "shopCount": 367
   },
   {
     "date": "2026-10-09",
-    "totalAmount": 2659.2100000000023,
+    "totalAmount": 2659.210000000003,
     "shopCount": 351
   },
   {
@@ -3081,7 +3081,7 @@
   },
   {
     "date": "2026-10-13",
-    "totalAmount": 2648.9900000000007,
+    "totalAmount": 2648.9900000000002,
     "shopCount": 356
   },
   {
@@ -3091,12 +3091,12 @@
   },
   {
     "date": "2026-10-15",
-    "totalAmount": 2872.0999999999995,
+    "totalAmount": 2872.1000000000004,
     "shopCount": 371
   },
   {
     "date": "2026-10-16",
-    "totalAmount": 2937.8500000000013,
+    "totalAmount": 2937.8499999999985,
     "shopCount": 380
   },
   {
@@ -3106,17 +3106,17 @@
   },
   {
     "date": "2026-10-18",
-    "totalAmount": 3331.1700000000033,
+    "totalAmount": 3331.1700000000005,
     "shopCount": 378
   },
   {
     "date": "2026-10-19",
-    "totalAmount": 2784.5800000000017,
+    "totalAmount": 2784.5800000000013,
     "shopCount": 371
   },
   {
     "date": "2026-10-20",
-    "totalAmount": 2776.6999999999994,
+    "totalAmount": 2776.7000000000003,
     "shopCount": 378
   },
   {
@@ -3126,7 +3126,17 @@
   },
   {
     "date": "2026-10-22",
-    "totalAmount": 2781.150000000003,
+    "totalAmount": 2781.1500000000015,
     "shopCount": 383
+  },
+  {
+    "date": "2026-10-23",
+    "totalAmount": 2820.119999999998,
+    "shopCount": 394
+  },
+  {
+    "date": "2026-10-24",
+    "totalAmount": 3114.5300000000007,
+    "shopCount": 396
   }
 ]
