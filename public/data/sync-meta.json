@@ -1,6 +1,6 @@
 {
   "mode": "mixed-by-source",
-  "updatedAt": "2026-11-10T00:52:50.212Z",
+  "updatedAt": "2026-11-11T02:45:45.683Z",
   "sourceRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input",
   "outputRoot": "F:\\claude-code\\饿了么美团回款数据统计系统\\public\\data",
   "items": [
@@ -21,29 +21,29 @@
     {
       "type": "elmCycle",
       "label": "饿了么代运营回款",
-      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\2\\20261009_20261109周期账单.xlsx",
+      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\2\\20261010_20261110周期账单.xlsx",
       "outputFile": "elmCycleData.json",
       "legacyOutputFile": "cycle-daily-stats.json",
-      "beforeDayCount": 400,
+      "beforeDayCount": 401,
       "appendedDayCount": 1,
-      "afterDayCount": 401,
-      "recordCount": 8005,
+      "afterDayCount": 402,
+      "recordCount": 7965,
       "mergeMode": "replace-existing-by-date",
-      "replacedDayCount": 2,
+      "replacedDayCount": 1,
       "skipped": false
     },
     {
       "type": "meituan",
       "label": "美团代运营回款",
-      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\3\\[2238+代运营账单明细表20261009-20261109+下载日期_20261110].xls",
+      "sourceFile": "F:\\claude-code\\饿了么美团回款数据统计系统\\excel-input\\3\\[2238+代运营账单明细表20261010-20261110+下载日期_20261111].xls",
       "outputFile": "meituanData.json",
       "legacyOutputFile": "meituan-daily-stats.json",
-      "beforeDayCount": 642,
+      "beforeDayCount": 643,
       "appendedDayCount": 1,
-      "afterDayCount": 643,
-      "recordCount": 24169,
+      "afterDayCount": 644,
+      "recordCount": 24199,
       "mergeMode": "replace-existing-by-date",
-      "replacedDayCount": 14,
+      "replacedDayCount": 12,
       "skipped": false
     },
     {
