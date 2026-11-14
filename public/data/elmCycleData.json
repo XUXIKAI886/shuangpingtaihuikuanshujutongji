@@ -2011,12 +2011,17 @@
   },
   {
     "date": "2026-11-11",
-    "totalAmount": 1193.9700000000003,
+    "totalAmount": 1194.5200000000002,
     "shopCount": 226
   },
   {
     "date": "2026-11-12",
-    "totalAmount": 1298.6500000000003,
-    "shopCount": 217
+    "totalAmount": 1330.100000000001,
+    "shopCount": 219
+  },
+  {
+    "date": "2026-11-13",
+    "totalAmount": 1316.02,
+    "shopCount": 224
   }
 ]
