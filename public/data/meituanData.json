@@ -3136,7 +3136,7 @@
   },
   {
     "date": "2026-10-24",
-    "totalAmount": 3114.530000000002,
+    "totalAmount": 3114.5300000000007,
     "shopCount": 396
   },
   {
@@ -3156,27 +3156,27 @@
   },
   {
     "date": "2026-10-28",
-    "totalAmount": 2607.6800000000017,
+    "totalAmount": 2607.68,
     "shopCount": 364
   },
   {
     "date": "2026-10-29",
-    "totalAmount": 2834.219999999997,
+    "totalAmount": 2834.22,
     "shopCount": 390
   },
   {
     "date": "2026-10-30",
-    "totalAmount": 2906.740000000001,
+    "totalAmount": 2906.740000000004,
     "shopCount": 400
   },
   {
     "date": "2026-10-31",
-    "totalAmount": 3335.7600000000034,
+    "totalAmount": 3335.760000000001,
     "shopCount": 400
   },
   {
     "date": "2026-11-01",
-    "totalAmount": 3388.0200000000013,
+    "totalAmount": 3388.0200000000036,
     "shopCount": 415
   },
   {
@@ -3186,7 +3186,7 @@
   },
   {
     "date": "2026-11-03",
-    "totalAmount": 2818.8699999999967,
+    "totalAmount": 2818.870000000002,
     "shopCount": 368
   },
   {
@@ -3196,7 +3196,7 @@
   },
   {
     "date": "2026-11-05",
-    "totalAmount": 2843.2100000000014,
+    "totalAmount": 2843.2100000000046,
     "shopCount": 381
   },
   {
@@ -3221,7 +3221,7 @@
   },
   {
     "date": "2026-11-10",
-    "totalAmount": 2564.450000000002,
+    "totalAmount": 2564.4500000000016,
     "shopCount": 378
   },
   {
@@ -3261,17 +3261,17 @@
   },
   {
     "date": "2026-11-18",
-    "totalAmount": 2780.5599999999963,
+    "totalAmount": 2780.56,
     "shopCount": 396
   },
   {
     "date": "2026-11-19",
-    "totalAmount": 2772.6099999999997,
+    "totalAmount": 2772.609999999996,
     "shopCount": 404
   },
   {
     "date": "2026-11-20",
-    "totalAmount": 2992.4700000000007,
+    "totalAmount": 2992.4700000000016,
     "shopCount": 414
   },
   {
@@ -3283,5 +3283,10 @@
     "date": "2026-11-22",
     "totalAmount": 3211.3299999999995,
     "shopCount": 412
+  },
+  {
+    "date": "2026-11-23",
+    "totalAmount": 2921.8100000000004,
+    "shopCount": 425
   }
 ]
